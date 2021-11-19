@@ -11739,6 +11739,11 @@ figure.highlight .section {
 .center-align {
   text-align: center;
 }
+#aboutme .introduction {
+  margin: 1.5rem auto 3rem;
+  max-width: 600px;
+  color: #999;
+}
 .bg-cover {
   position: relative;
   display: flex;
