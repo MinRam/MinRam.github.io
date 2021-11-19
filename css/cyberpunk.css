@@ -11663,6 +11663,131 @@ figure.highlight .section {
     padding: 1.5rem 1rem;
   }
 }
+.about-container {
+  width: 90%;
+  max-width: 1225px;
+  margin-top: -60px;
+}
+.about-card {
+  margin-top: 150px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 15px 35px rgba(50,50,93,0.1), 0 5px 15px rgba(0,0,0,0.07) !important;
+}
+.circle {
+  border-radius: 50%;
+}
+.card-content {
+  padding: 20px 40px;
+}
+.row .col {
+  padding: 0 1.25rem;
+}
+.hide-on-med-and-down {
+  display: none !important;
+}
+.post-statis {
+  text-align: center;
+}
+.post-statis .statis {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  text-align: center;
+  letter-spacing: 0.03rem;
+}
+.post-statis .statis .count {
+  display: block;
+  font-size: 1.3rem;
+  font-weight: bold;
+  text-decoration: underline;
+}
+.post-statis .statis .count a {
+  color: #42b983;
+}
+.post-statis .statis .name {
+  font-size: 0.9rem;
+  color: #777;
+}
+.profile .avatar-img {
+  max-width: 160px;
+  width: 100%;
+  margin: 0 auto;
+  transform: translate3d(0, -65%, 0);
+  box-shadow: 0 15px 35px rgba(50,50,93,0.1), 0 5px 15px rgba(0,0,0,0.07) !important;
+}
+.profile .author {
+  margin-top: -80px;
+}
+.profile .author .post-statis {
+  margin: 0.5rem 0 1.4rem 0;
+}
+.profile .author .title {
+  margin-bottom: 0.1rem;
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: #3c4858;
+}
+.profile .author .career {
+  margin: 8px 0;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #777;
+}
+#aboutme .profile .social-link {
+  margin: 1.5rem 0 0.8rem 0;
+}
+.center-align {
+  text-align: center;
+}
+.bg-cover {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 60vh;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  background-position: center center;
+  background-size: cover;
+  transform: translate3d(0px, 0px, 0px);
+}
+.bg-cover:after {
+  -webkit-animation: rainbow 60s infinite;
+  animation: rainbow 60s infinite;
+}
+.bg-cover:before,
+.bg-cover:after {
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: block;
+  left: 0;
+  top: 0;
+  content: "";
+}
+.bg-cover .container {
+  position: relative;
+  color: #fff;
+  z-index: 2;
+}
+.bg-cover .title {
+  font-size: 4rem;
+  line-height: 1.2em;
+  margin-bottom: 20px;
+  position: relative;
+}
+.bg-cover .description {
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4em;
+  color: #eee;
+}
+.bg-cover .post-title {
+  margin: 0 auto;
+  font-size: 2.5rem;
+  font-weight: 400;
+}
 body {
   counter-reset: card;
 }
