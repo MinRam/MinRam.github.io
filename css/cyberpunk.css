@@ -11718,6 +11718,12 @@ figure.highlight .section {
 .profile .author {
   margin-top: -80px;
 }
+.profile .author .career {
+  margin: 8px 0;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #777;
+}
 .profile .author .post-statis {
   margin: 0.5rem 0 1.4rem 0;
 }
@@ -11727,11 +11733,10 @@ figure.highlight .section {
   font-weight: 500;
   color: #3c4858;
 }
-.profile .author .career {
-  margin: 8px 0;
-  font-size: 0.9rem;
-  font-weight: 400;
-  color: #777;
+#aboutme .introduction {
+  margin: 1.5rem auto 3rem;
+  max-width: 600px;
+  color: #999;
 }
 #aboutme .profile .social-link {
   margin: 1.5rem 0 0.8rem 0;
@@ -11739,10 +11744,57 @@ figure.highlight .section {
 .center-align {
   text-align: center;
 }
-#aboutme .introduction {
-  margin: 1.5rem auto 3rem;
+.my-skills {
+  padding: 3.8rem 1.5rem 0.8rem 1.5rem;
+}
+.my-skills .title {
+  font-size: 2rem;
+  margin-bottom: 2.25rem;
+}
+.my-skills .title .tag-chips {
   max-width: 600px;
-  color: #999;
+  margin-top: 2rem;
+}
+.chip {
+  margin: 10px 10px;
+  padding: 19px 14px;
+  display: inline-flex;
+  line-height: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 3px 5px rgba(0,0,0,0.12);
+  z-index: 0;
+  text-align: center;
+  color: #34495e;
+  background-color: #fff;
+  border: 1px solid #eee;
+  margin-top: 1px;
+}
+.chip:hover {
+  color: #fff;
+  background: linear-gradient(to right, #3a85ff 0%, #3273dc 100%);
+  border: 1px solid #3a85ff;
+  box-shadow: 0 5px 5px rgba(0,0,0,0.25);
+}
+.waves-effect {
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+  overflow: hidden;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  vertical-align: middle;
+  z-index: 1;
+  -webkit-transition: 0.3s ease-out;
+  transition: 0.3s ease-out;
+}
+.waves-light {
+  background-color: rgba(255,255,255,0.45);
 }
 .bg-cover {
   position: relative;
