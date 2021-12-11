@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>简单系统设计 —— 缓存（三） - 狐说</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="狐说"><meta name="msapplication-TileImage" content="/img/favicon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="狐说"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="分布式系统的“短期记忆”"><meta property="og:type" content="blog"><meta property="og:title" content="简单系统设计 —— 缓存（三）"><meta property="og:url" content="https://minram.github.io/xi-tong-she-ji/systemdesign-03-caching/"><meta property="og:site_name" content="狐说"><meta property="og:description" content="分布式系统的“短期记忆”"><meta property="og:image" content="https://minram.github.io/Images/SystemDesign-Cache-Position.jpg"><meta property="og:image" content="https://minram.github.io/Images/SystemDesign-Cache-Write-Through.jpg"><meta property="og:image" content="https://minram.github.io/Images/SystemDesign-Cache-Write-Around.jpg"><meta property="og:image" content="https://minram.github.io/Images/SystemDesign-Cache-Write-Back.jpg"><meta property="article:published_time" content="2021-12-09T04:00:00.000Z"><meta property="article:modified_time" content="2021-12-11T16:38:05.501Z"><meta property="article:author" content="MinRam"><meta property="article:tag" content="面试"><meta property="article:tag" content="系统设计"><meta property="article:tag" content="缓存"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/Images/SystemDesign-Cache-Position.jpg"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://minram.github.io/xi-tong-she-ji/systemdesign-03-caching/"},"headline":"简单系统设计 —— 缓存（三）","image":["https://minram.github.io/Images/SystemDesign-Cache-Position.jpg","https://minram.github.io/Images/SystemDesign-Cache-Write-Through.jpg","https://minram.github.io/Images/SystemDesign-Cache-Write-Around.jpg","https://minram.github.io/Images/SystemDesign-Cache-Write-Back.jpg"],"datePublished":"2021-12-09T04:00:00.000Z","dateModified":"2021-12-11T16:38:05.501Z","author":{"@type":"Person","name":"MinRam"},"publisher":{"@type":"Organization","name":"狐说","logo":{"@type":"ImageObject","url":"https://minram.github.io/img/logo.png"}},"description":"分布式系统的“短期记忆”"}</script><link rel="canonical" href="https://minram.github.io/xi-tong-she-ji/systemdesign-03-caching/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><script>var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?b23c7486a462408fced4f792fc81a6a8";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();</script><meta name="msvalidate.01" content="58D8CEFE148E36C57AB5AF385614971B"><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><!--!--><!--!--><meta name="generator" content="Hexo 5.4.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.png" alt="狐说" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">主页</a><a class="navbar-item" href="/archives">归档</a><a class="navbar-item" href="/categories">集合</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/about">关于</a></div><div class="navbar-end"><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-9-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2021-12-09T04:00:00.000Z" title="12/9/2021, 12:00:00 PM">2021-12-09</time>发表</span><span class="level-item"><time dateTime="2021-12-11T16:38:05.501Z" title="12/12/2021, 12:38:05 AM">2021-12-12</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></span><span class="level-item">10 minutes读完 (大约 1535 个字)</span><span class="level-item" id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv">0</span>&nbsp;已阅</span></div></div><h1 class="title is-3 is-size-4-mobile">简单系统设计 —— 缓存（三）</h1><div class="content"><blockquote>
+<p>本系列，是自己学习<a target="_blank" rel="noopener" href="https://www.educative.io/courses/grokking-the-system-design-interview"><em>Grokking the System Design</em></a>过程中的笔记。<br>希望读者在看完全文后，也能留下你们的经验。我万分荣幸能收到你们的消息。<br>如果能从这里学到点东西，记得请我喝杯☕☕☕~<br>                                                        <p align="right">—— MinRam</p></p>
+</blockquote>
+<h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><blockquote>
+<p><strong>负载均衡</strong> 帮助我们在节点不断增多的系统上进行水平扩展。而<strong>缓存</strong> 是帮我们利用现有资源，减少成本较大的逻辑处理。</p>
+</blockquote>
+<p><strong>缓存</strong>就是系统的<strong>短期记忆</strong>。</p>
+<p>每一次从后端拿到的数据很有可能再次被使用，那么通过消耗一定的存储空间（内存等），当我们再次需要数据的时候，我们可以直接从存储空间获取，而不是从后端再次申请。这将节省我们很多成本。</p>
+<h2 id="二、在系统中的位置-Position"><a href="#二、在系统中的位置-Position" class="headerlink" title="二、在系统中的位置 Position"></a>二、在系统中的位置 <em>Position</em></h2><blockquote>
+<p>缓存在很多地方都可以看到，例如硬件上的CPU缓存，操作系统中内存，浏览器上的页面缓存，Web应用上的Redis等</p>
+</blockquote>
+<p>在分布式系统中，缓存往往会使用在<strong>较前端</strong>的部分，来最大限度的降低下游的请求压力。前面提到，当我们可以直接从缓存拿到数据的时候，就不再需要往下游请求数据。</p>
+<h2 id="三、类型-Cache-Type"><a href="#三、类型-Cache-Type" class="headerlink" title="三、类型 Cache Type"></a>三、类型 <em>Cache Type</em></h2><p>大多数系统主要应用几种类型的缓存：</p>
+<p><img src="/Images/SystemDesign-Cache-Position.jpg" alt="缓存概览"></p>
+<h3 id="3-1-应用服务缓存-Appliation-Server-Cache"><a href="#3-1-应用服务缓存-Appliation-Server-Cache" class="headerlink" title="3.1 应用服务缓存 Appliation Server Cache"></a>3.1 应用服务缓存 <em>Appliation Server Cache</em></h3><p>在<strong>请求层</strong>的应用服务器上放置缓存，同时会配置一个<strong>本地存储</strong>用于暂放请求数据。</p>
+<ul>
+<li><p>对于服务器每次需要发送的请求时，会先检查<strong>本地存储</strong>中是否已有。如果存在，直接从本地快速获取。若不存在，再发送请求去获取索要的数据。</p>
+</li>
+<li><p>本地存储可以是内存（如<a target="_blank" rel="noopener" href="http://memcached.org/">Memcached</a>和<a target="_blank" rel="noopener" href="https://redis.io/">Redis</a>）或者是磁盘。内存的速度显然比硬盘快几个<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/RAM_drive">量级</a></p>
+</li>
+</ul>
+<h3 id="3-2-数据库缓存-Database-Cache"><a href="#3-2-数据库缓存-Database-Cache" class="headerlink" title="3.2 数据库缓存 Database Cache"></a>3.2 数据库缓存 <em>Database Cache</em></h3><blockquote>
+<p>不同于应用服务器缓存所依赖的外部缓存机制（如Redis)， 数据库自身也存在缓存。</p>
+</blockquote>
+<p>数据库的数据分为两种：</p>
+<ul>
+<li><strong>冷数据</strong>：通常存储在磁盘上且不经常查询的数据。</li>
+<li><strong>热数据</strong>：频繁查询的数据，会被缓存在内存中。</li>
+</ul>
+<p>通过某些级别的配置，可以针对数据库读写模型，在不更改业务代码的情况下就能提供更好的性能。而这就靠DBA或者运维工程师的功底。</p>
+<blockquote>
+<p>笔者在数据库缓存方面并没有太多的经验，不再扩展，待后续补充。</p>
+</blockquote>
+<h3 id="3-3-内容分发网络-CDN"><a href="#3-3-内容分发网络-CDN" class="headerlink" title="3.3 内容分发网络 CDN"></a>3.3 内容分发网络 <em>CDN</em></h3><blockquote>
+<p><strong>内容分发网络</strong> <em>Content Delivery Network</em> = 更智能的镜像服务器 + 缓存 + 流量导控</p>
+</blockquote>
+<p><strong>CDN</strong> 简单来讲就是将内存缓存在离用户更近的地方。采用更多的缓存服务器（<strong>CDN边缘节点</strong>），布置在用户访问相对集中的地区或网络中。当用户访问网站时，利用全局负载，将访问重定向到用户最近的缓存服务器上。由缓存服务器响应响应的请求。</p>
+<p><strong>CDN</strong> 将我们的<strong>应用服务器</strong>从大量的静态资源请求解放出来。对于图片，静态HTML，CSS等的资源，则从CDN节点直接获取。<strong>应用服务器</strong>将更专注于业务动态处理。</p>
+<blockquote>
+<p>如果我们的站点还不够大，则可以通过像<a target="_blank" rel="noopener" href="http://nginx.org/">Nginx</a>这样的轻量级HTTP服务器，从单独的子域(static.xxxx.com)提供简单转换。</p>
+</blockquote>
+<h2 id="四、缓存有效性-Invalidation"><a href="#四、缓存有效性-Invalidation" class="headerlink" title="四、缓存有效性 Invalidation"></a>四、缓存有效性 <em>Invalidation</em></h2><blockquote>
+<p>缓存减少了系统很大部分的多余请求。但是缓存终究只是真实数据（如数据库中的数据）的复制品，存在着和真实数据不一致的风险。</p>
+</blockquote>
+<p>为解决缓存不一致性的问题，提出了<strong>缓存失效</strong>的概念：</p>
+<h3 id="4-1-直写缓存-Write-Through"><a href="#4-1-直写缓存-Write-Through" class="headerlink" title="4.1 直写缓存 Write-Through"></a>4.1 直写缓存 <em>Write-Through</em></h3><p><img src="/Images/SystemDesign-Cache-Write-Through.jpg"></p>
+<p>该方案就是在<strong>写操作</strong>时，<strong>同时写入缓存和真实数据源</strong>（如数据库）。能保证快速的缓存检索，同时由于写的操作直接写入真实数据源，而具有缓存和存储保持<strong>完全的数据一致性</strong>。此外由于直接将数据推送给了真实数据源，最小化数据丢失的风险。</p>
+<blockquote>
+<p>缺点： <strong>写操作</strong>需要两次操作，因而存在高延迟。<strong>适用于</strong>频繁写和读的系统。</p>
+</blockquote>
+<h3 id="4-2-绕写缓存-Write-Around"><a href="#4-2-绕写缓存-Write-Around" class="headerlink" title="4.2 绕写缓存 Write-Around"></a>4.2 绕写缓存 <em>Write-Around</em></h3><p><img src="/Images/SystemDesign-Cache-Write-Around.jpg"></p>
+<p>该方案就是在<strong>写操作</strong>时，<strong>绕过缓存直接写入真实数据源</strong>。能避免缓存因为数据写入，而频繁更新。</p>
+<blockquote>
+<p>缺点： <strong>读操作</strong>会出现缓存丢失，因而需要重新到真实数据源检索，存在高延迟。 <strong>适用于</strong>不经常读取最近写入数据的系统。</p>
+</blockquote>
+<h3 id="4-3-回写缓存-Write-Back"><a href="#4-3-回写缓存-Write-Back" class="headerlink" title="4.3 回写缓存 Write-Back"></a>4.3 回写缓存 <em>Write-Back</em></h3><p><img src="/Images/SystemDesign-Cache-Write-Back.jpg"></p>
+<p>该方案是在<strong>写操作</strong>时，只写入<strong>缓存</strong>就结束了。在一定条件(如一定的时间间隔)触发后，更新缓存到<strong>真实数据源</strong>。这对于<strong>写密集型</strong>应用程序，这将导致低延迟和高吞吐量</p>
+<blockquote>
+<p>缺点：当节点处于故障时，将导致数据丢失。 适用于<strong>写密集行</strong>且<strong>数据不敏感</strong>的系统。</p>
+</blockquote>
+<h2 id="五、缓存淘汰原则-Eviction-Policies"><a href="#五、缓存淘汰原则-Eviction-Policies" class="headerlink" title="五、缓存淘汰原则 Eviction Policies"></a>五、缓存淘汰原则 <em>Eviction Policies</em></h2><blockquote>
+<p>细节待更新</p>
+</blockquote>
+<p>常见的几种缓存淘汰原则：</p>
+<ul>
+<li><strong>FIFO</strong> (<em>First In First Out</em>) </li>
+<li><strong>LIFO</strong> (<em>Last In First Out</em>)</li>
+<li><strong>LRU</strong>  (<em>Least Recently Used</em>)</li>
+<li><strong>MRU</strong>  (<em>Most Recently Used</em>)</li>
+<li><strong>LFU</strong>  (<em>Least Frequently Used</em>)</li>
+<li><strong>RR</strong>   (<em>Random Replacement</em>)</li>
+</ul>
+</div><div class="article-licensing box"><div class="licensing-title"><p>简单系统设计 —— 缓存（三）</p><p><a href="https://minram.github.io/xi-tong-she-ji/systemdesign-03-caching/">https://minram.github.io/xi-tong-she-ji/systemdesign-03-caching/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>MinRam</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2021-12-09</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2021-12-12</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/%E9%9D%A2%E8%AF%95/">面试</a><a class="link-muted mr-2" rel="tag" href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a><a class="link-muted mr-2" rel="tag" href="/tags/%E7%BC%93%E5%AD%98/">缓存</a></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css"><div class="social-share"></div><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script></article></div><div class="card"><div class="card-content"><h3 class="menu-label has-text-centered">对你有帮助？ 请我喝一杯咖啡吧 ฅ’ω’ฅ </h3><div class="buttons is-centered"><a class="button donate" data-type="wechat"><span class="icon is-small"><i class="fab fa-weixin"></i></span><span>Wechat</span><span class="qrcode"><img src="/img/donates/wechat_donate.jpg" alt="Wechat"></span></a><a class="button donate" data-type="alipay"><span class="icon is-small"><i class="fab fa-alipay"></i></span><span>Alipay</span><span class="qrcode"><img src="/img/donates/alipay_donate.jpg" alt="Alipay"></span></a></div></div></div><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/xi-tong-she-ji/systemdesign-02-load-balance/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">简单系统设计 —— 负载均衡（二）</span></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="content" id="waline-thread"></div><script src="https://cdn.jsdelivr.net/npm/@waline/client@1.3.1/dist/Waline.min.js"></script><script>Waline({
+            el: '#waline-thread',
+            serverURL: "https://waline-comment-hitdlf2dx-minram.vercel.app/",
+            lang: "zh-CN",
+            visitor: true,
+            emoji: ["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],
+            dark: "auto",
+            meta: ["nick","mail","link"],
+            requiredMeta: ["nick"],
+            login: "enable",
+            
+            
+            pageSize: 10,
+            avatarCDN: "https://sdn.geekzu.org/avatar/",
+            avatarForce: false,
+            highlight: true,
+            mathTagSupport: false,
+            copyright: true,
+            
+        });</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/avatar.jpg" alt="MinRam"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">MinRam</p><p class="is-size-6 is-block">Software Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>SuZhou. JiangSu. China</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives"><p class="title">7</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories"><p class="title">3</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags"><p class="title">6</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/minram" target="_blank" rel="noopener">关注</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="WeChat" href="https://github.com/minram"><img src="/img/social_link/wechat.svg" style="height: 20px;width: 20px;"></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/minram"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Gmail" href="mailto:minfysui@gmail.com"><img src="/img/social_link/gmail.svg" style="height: 20px;width: 20px;"></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="level is-mobile" href="#一、前言"><span class="level-left"><span class="level-item">一、前言</span></span></a></li><li><a class="level is-mobile" href="#二、在系统中的位置-Position"><span class="level-left"><span class="level-item">二、在系统中的位置 Position</span></span></a></li><li><a class="level is-mobile" href="#三、类型-Cache-Type"><span class="level-left"><span class="level-item">三、类型 Cache Type</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#3-1-应用服务缓存-Appliation-Server-Cache"><span class="level-left"><span class="level-item">3.1 应用服务缓存 Appliation Server Cache</span></span></a></li><li><a class="level is-mobile" href="#3-2-数据库缓存-Database-Cache"><span class="level-left"><span class="level-item">3.2 数据库缓存 Database Cache</span></span></a></li><li><a class="level is-mobile" href="#3-3-内容分发网络-CDN"><span class="level-left"><span class="level-item">3.3 内容分发网络 CDN</span></span></a></li></ul></li><li><a class="level is-mobile" href="#四、缓存有效性-Invalidation"><span class="level-left"><span class="level-item">四、缓存有效性 Invalidation</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#4-1-直写缓存-Write-Through"><span class="level-left"><span class="level-item">4.1 直写缓存 Write-Through</span></span></a></li><li><a class="level is-mobile" href="#4-2-绕写缓存-Write-Around"><span class="level-left"><span class="level-item">4.2 绕写缓存 Write-Around</span></span></a></li><li><a class="level is-mobile" href="#4-3-回写缓存-Write-Back"><span class="level-left"><span class="level-item">4.3 回写缓存 Write-Back</span></span></a></li></ul></li><li><a class="level is-mobile" href="#五、缓存淘汰原则-Eviction-Policies"><span class="level-left"><span class="level-item">五、缓存淘汰原则 Eviction Policies</span></span></a></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io/" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile" href="https://www.microsoft.com/zh-cn/ard/recruitment" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">微软招聘</span></span><span class="level-right"><span class="level-item tag">www.microsoft.com</span></span></a></li></ul></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/Hexo/"><span class="level-start"><span class="level-item">Hexo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E7%A8%8B%E5%BA%8F%E5%91%98%E9%9D%A2%E8%AF%95%E6%94%BB%E7%95%A5/"><span class="level-start"><span class="level-item">程序员面试攻略</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/"><span class="level-start"><span class="level-item">系统设计</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li></ul></div></div></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-12-09T04:00:00.000Z">2021-12-09</time></p><p class="title"><a href="/xi-tong-she-ji/systemdesign-03-caching/">简单系统设计 —— 缓存（三）</a></p><p class="categories"><a href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-11-25T04:00:00.000Z">2021-11-25</time></p><p class="title"><a href="/xi-tong-she-ji/systemdesign-02-load-balance/">简单系统设计 —— 负载均衡（二）</a></p><p class="categories"><a href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-11-21T04:00:00.000Z">2021-11-21</time></p><p class="title"><a href="/xi-tong-she-ji/systemdesign-01-distubed-system/">简单系统设计 —— 分布式系统（一）</a></p><p class="categories"><a href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-11-01T04:00:00.000Z">2021-11-01</time></p><p class="title"><a href="/cheng-xu-yuan-mian-shi-gong-lue/interviewincoming/">程序员面试攻略 —— 薪资构成</a></p><p class="categories"><a href="/categories/%E7%A8%8B%E5%BA%8F%E5%91%98%E9%9D%A2%E8%AF%95%E6%94%BB%E7%95%A5/">程序员面试攻略</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-10-27T09:00:00.000Z">2021-10-27</time></p><p class="title"><a href="/cheng-xu-yuan-mian-shi-gong-lue/interviewresume/">程序员面试攻略 —— 简历</a></p><p class="categories"><a href="/categories/%E7%A8%8B%E5%BA%8F%E5%91%98%E9%9D%A2%E8%AF%95%E6%94%BB%E7%95%A5/">程序员面试攻略</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">集合</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2021/12/"><span class="level-start"><span class="level-item">December 2021</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/11/"><span class="level-start"><span class="level-item">November 2021</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/10/"><span class="level-start"><span class="level-item">October 2021</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/Hexo/"><span class="tag">Hexo</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/"><span class="tag">分布式系统</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/"><span class="tag">系统设计</span><span class="tag">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%BC%93%E5%AD%98/"><span class="tag">缓存</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/"><span class="tag">负载均衡</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E9%9D%A2%E8%AF%95/"><span class="tag">面试</span><span class="tag">6</span></a></div></div></div></div></div><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">订阅更新</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.png" alt="狐说" height="28"></a><p class="is-size-7"><span>&copy; 2021 MinRam</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> <br>本站所有文章已同步微信公众号 <a>FoxCode</a><br><span id="busuanzi_container_site_uv">访客数：<span id="busuanzi_value_site_uv">0</span></span></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-Hans");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"文章","pages":"页","categories":"分类","tags":"标签"});
+        });</script></body></html>
