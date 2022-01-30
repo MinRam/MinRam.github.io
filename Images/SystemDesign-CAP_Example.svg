@@ -1,0 +1,36 @@
+<svg width="600" height="399.99999999999994" xmlns="http://www.w3.org/2000/svg">
+    <g id="services">
+     <title>FixCode - MinRam</title>
+     <g id="svg_serviceA">
+      <path id="svg_1" d="m54,251.3335l120,0l0,81l-120,0l0,-81z" opacity="undefined" stroke="#ffffff" fill="#5B9BA2"/>
+      <text stroke="#ffffff" xml:space="preserve" text-anchor="start" font-family="'Assistant'" font-size="24" stroke-width="0" id="svg_3" y="300.3335" x="68" fill="#ffffff">Service A</text>
+     </g>
+     <g id="svg_serviceB">
+      <path id="svg_5" d="m411,255.3335l120,0l0,81l-120,0l0,-81z" opacity="undefined" stroke="#ffffff" fill="#5B9BA2"/>
+      <text stroke="#ffffff" xml:space="preserve" text-anchor="start" font-family="'Assistant'" font-size="24" stroke-width="0" id="svg_6" y="304.3335" x="425" fill="#ffffff">Service B</text>
+     </g>
+     <g id="svg_serviceC">
+      <path id="svg_2" d="m225.5641,27.7694l120,0l0,81l-120,0l0,-81z" opacity="undefined" stroke="#ffffff" fill="#529D94"/>
+      <text stroke="#ffffff" xml:space="preserve" text-anchor="start" font-family="'Assistant'" font-size="24" stroke-width="0" id="svg_4" y="76.7694" x="239.5641" fill="#ffffff">Service C</text>
+     </g>
+     <text fill="#000000" stroke="#ff8c00" stroke-width="0" x="252.51889" y="131.30933" id="svg_21" font-size="15" font-family="Noto Sans JP" text-anchor="start" xml:space="preserve">DownTime</text>
+     <text fill="#000000" stroke="#ff8c00" stroke-width="0" x="424.23409" y="247.97465" id="svg_22" font-size="10" font-family="Noto Sans JP" text-anchor="start" xml:space="preserve">日志记录，停止请求</text>
+     <text fill="#000000" stroke="#ff8c00" stroke-width="0" x="74.23812" y="244.94439" id="svg_23" font-size="10" font-family="Noto Sans JP" text-anchor="start" xml:space="preserve">尝试重新发送请求</text>
+     <text fill="#000000" stroke="#ff8c00" stroke-width="0" x="235.85242" y="333.32721" id="svg_24" font-size="10" font-family="Noto Sans JP" text-anchor="start" xml:space="preserve">网络故障后，会发生什么？</text>
+     <g id="svg_RequestA_C">
+      <path fill="none" stroke="#559e84" stroke-width="3" opacity="NaN" d="m128.2779,219.18711l68.18449,-85.85531l-21.21188,5.55549" stroke-dashoffset="400" id="svg_26">
+              <animate attributeName="stroke-dasharray" values="135;335;" dur="2s" repeatCount="indefinite" />
+      </path>
+      <text fill="#000000" stroke="#559E84" stroke-width="0" x="132.03518" y="167.8518" id="svg_34" font-size="10" font-family="Noto Sans JP" text-anchor="start" xml:space="preserve" transform="rotate(-44.1052 148.269 164.485)">Request</text>
+     </g>
+     <g id="svg_RequestB_C">
+      <path fill="none" stroke="#ff0000" stroke-width="3" opacity="NaN" d="m461.10236,220.1972l-87.87432,-87.87548l23.23206,4.04036" id="svg_39"/>
+      <text fill="#000000" stroke="#559E84" stroke-width="0" x="414.86022" y="167.34676" id="svg_40" font-size="10" font-family="Noto Sans JP" text-anchor="start" xml:space="preserve" transform="rotate(42.9313 431.094 163.98)">Request</text>
+     </g>
+     <path fill="none" stroke="#559e84" stroke-width="0" opacity="NaN" d="m237.64706,282.35294l119.41176,-3.52941" id="svg_7"/>
+     <line fill="none" stroke="#559e84" opacity="NaN" x1="637" y1="623" x2="637" y2="623" id="svg_8"/>
+     <line fill="none" stroke="#559e84" opacity="NaN" x1="643" y1="636" x2="643" y2="636" id="svg_10"/>
+     <path stroke-width="2" id="svg_11" d="m361,293.3335l-160,-0.3335l15,10" opacity="NaN" stroke="#f7a440" fill="#fff" />
+     <path transform="rotate(-179.951 301.652 277.348)" stroke-width="2" id="svg_12" d="m381.65214,272.68136l-160,-0.3335l15,10" opacity="NaN" stroke="#f7a440" fill="#fff"/>
+    </g>
+   </svg>
