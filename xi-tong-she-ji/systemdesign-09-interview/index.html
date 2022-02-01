@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>简单系统设计 —— 面试（结） - 狐说</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="狐说"><meta name="msapplication-TileImage" content="/img/favicon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="狐说"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="系统设计结尾"><meta property="og:type" content="blog"><meta property="og:title" content="简单系统设计 —— 面试（结）"><meta property="og:url" content="https://minram.github.io/xi-tong-she-ji/systemdesign-09-interview/"><meta property="og:site_name" content="狐说"><meta property="og:description" content="系统设计结尾"><meta property="og:image" content="https://minram.github.io/Images/SystemDesign_Interview.jpeg"><meta property="article:published_time" content="2022-01-31T05:00:00.000Z"><meta property="article:modified_time" content="2022-02-01T15:47:22.037Z"><meta property="article:author" content="MinRam"><meta property="article:tag" content="面试"><meta property="article:tag" content="系统设计"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/Images/SystemDesign_Interview.jpeg"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://minram.github.io/xi-tong-she-ji/systemdesign-09-interview/"},"headline":"简单系统设计 —— 面试（结）","image":[],"datePublished":"2022-01-31T05:00:00.000Z","dateModified":"2022-02-01T15:47:22.037Z","author":{"@type":"Person","name":"MinRam"},"publisher":{"@type":"Organization","name":"狐说","logo":{"@type":"ImageObject","url":"https://minram.github.io/img/logo.png"}},"description":"系统设计结尾"}</script><link rel="canonical" href="https://minram.github.io/xi-tong-she-ji/systemdesign-09-interview/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><script>var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?b23c7486a462408fced4f792fc81a6a8";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();</script><meta name="msvalidate.01" content="58D8CEFE148E36C57AB5AF385614971B"><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><!--!--><!--!--><meta name="generator" content="Hexo 5.4.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.png" alt="狐说" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">主页</a><a class="navbar-item" href="/archives">归档</a><a class="navbar-item" href="/categories">集合</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/comments">留言</a><a class="navbar-item" href="/about">关于</a></div><div class="navbar-end"><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-9-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="fill" src="/Images/SystemDesign_Interview.jpeg" alt="简单系统设计 —— 面试（结）"></span></div><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2022-01-31T05:00:00.000Z" title="1/31/2022, 1:00:00 PM">2022-01-31</time>发表</span><span class="level-item"><time dateTime="2022-02-01T15:47:22.037Z" title="2/1/2022, 11:47:22 PM">2022-02-01</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></span><span class="level-item">14 minutes读完 (大约 2096 个字)</span><span class="level-item" id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv">0</span>&nbsp;已阅</span></div></div><h1 class="title is-3 is-size-4-mobile">简单系统设计 —— 面试（结）</h1><div class="content"><h2 id="一、前言-Overview"><a href="#一、前言-Overview" class="headerlink" title="一、前言 Overview"></a>一、前言 <em>Overview</em></h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.minram.top/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/"><strong>简单系统设计</strong></a>, 共9篇，边学边写。在努力克服自己的惰性，终于能在2022年来临前完成系列。在整个过程中，遇到新的思想，新的问题，留着后面解开。</p>
+</blockquote>
+<p>系列开篇的时候，学习系统设计的主要目的（面试），所以在总结篇，就整理下自己对系统设计整体知识点和面试思路。希望<em>N</em>年后，自己回头看的时候，能读出自己的幼稚与不足。</p>
+<blockquote>
+<p>如果整个系列有帮助，记得请我☕~</p>
+</blockquote>
+<h2 id="二、系统设计面试的目的-Destination"><a href="#二、系统设计面试的目的-Destination" class="headerlink" title="二、系统设计面试的目的 Destination"></a>二、系统设计面试的目的 <em>Destination</em></h2><p><em>IT</em>公司中，都在构建和优化商业级系统（可拓展 &amp; 高性能）。所以我认为，公司更需要具备合理设计技能的员工（工程师≠码猿）。</p>
+<p>系统设计面试，是一道开放性题目。除了设计能力，还有对思考过程、算法知识、人与人沟通以及突发思维的考量。脑子要转得快，要灵光，要系统，要谨慎。这才配得上工程师的称号。</p>
+<h2 id="三、关键步骤-Steps"><a href="#三、关键步骤-Steps" class="headerlink" title="三、关键步骤 Steps"></a>三、关键步骤 <em>Steps</em></h2><h3 id="1-澄清需求和问题"><a href="#1-澄清需求和问题" class="headerlink" title="1. 澄清需求和问题"></a>1. 澄清需求和问题</h3><blockquote>
+<p><em>Rome was not built in a day.</em></p>
+</blockquote>
+<p>不管是淘宝，支付宝还是微信，他们所包含的上千个功能，都不是在短短45~60分钟设计完成的。这是多年的功能迭代，实践后累积的。</p>
+<p>对于我们，时间有限，我们只能把面试官的题目，缩小到关键功能上。需求可以分成<strong>功能性需求</strong>和<strong>非功能性需求</strong>。然后开始在白板设计<strong>简单功能</strong>。</p>
+<p>例如： 在设计一套打车系统，可以列下如下要求：</p>
+<p><img src="/Images/SystemDesign-Conclusion-amap.jpg" alt="高德打车"></p>
+<ol>
+<li>乘客可以预定和取消行程</li>
+<li>系统必须匹配司机</li>
+<li>司机可以取消行程</li>
+<li>乘客和司机可以互相评分</li>
+<li>支持支付渠道</li>
+<li>乘客可以查看司机的实时定位</li>
+</ol>
+<p>提出要求，是为后续的设计范围。同时需要对面试官提出明确的问题（提出一个好问题是一门徐文，同时能展示自己的逻辑思维）。比如用户群体是什么样的？系统后续是在什么平台被使用的？这些都将协助自己识别，自己设计瓶颈和预留拓展性。</p>
+<h3 id="2-容量估算"><a href="#2-容量估算" class="headerlink" title="2. 容量估算"></a>2. 容量估算</h3><p>在明确系统设计需求后，下一步就是需要确定系统的受众。了解系统的用户量级，如果未给出，应主动询问面试官。这是一个极其重要的设计参考值，能帮助我们对系统设计瓶颈的预估。</p>
+<p>通过<strong>活跃用户</strong>的预测，进而估算系统接受请求的量级，以及预估所需存储的数据空间。同时需要知道系统的请求重心是在读还是写，预估读请求和写请求的比例和量级，从而决定使用SQL或者NoSQL的数据库，以及缓存的迫切程度。</p>
+<p>同样举例说明：</p>
+<p>假设我们要设计一款类似<em>Weibo</em>的系统。在这种情况下，我们可以做出假设性估算：</p>
+<ul>
+<li>3亿活跃用户，每天发文6亿。</li>
+<li>热数据占20%。</li>
+<li>每个用户平均有1000关注量。</li>
+<li>一条发文至少被转发1000次。</li>
+<li>每条发文上至少带有一个额外的媒体资源（图片或者视频）。</li>
+</ul>
+<p>从而我们可以估算出这个读写请求的量级，所需服务器的规格和数量。同时能估算出1年所需要的数据存储大小（发文大小 x 每日发文量 x 天数） 。</p>
+<p>这些同时也是系统发布前，性能测试的标准~</p>
+<h3 id="3-设计目标"><a href="#3-设计目标" class="headerlink" title="3. 设计目标"></a>3. 设计目标</h3><p>系统设计的的部分主要要求：延迟 &amp; 吞吐量。</p>
+<ul>
+<li><strong>延迟</strong> 是指处理客户端的请求，并返回结果所需要的时间；</li>
+<li><strong>吞吐量</strong> 是指在给定时间间隔内可以处理的请求数；</li>
+</ul>
+<p><strong>高性能系统</strong>，必须具有最小延迟和最大吞吐量。设计京东网站，如果加载时间很长，那客户早就跑光了。如果双11节日，网站就容易因此崩溃，然后因此亏本，老板跑路。</p>
+<p>第二个设计目标是在可用性和一致性之间进行选择。根据<a target="_blank" rel="noopener" href="https://blog.minram.top/xi-tong-she-ji/systemdesign-08-cap/">CAP理论</a>，可以使用 CP 或 AP 系统来容忍网络中的故障。可用性和一致性的选择由系统类型决定。</p>
+<p><img src="/Images/SystemDesign-Conclusion-CAP.png" alt="CAP理论"></p>
+<p>如果是金融项目，则会更注重一致性。然而，对于微博这类的系统，则更注重于可用性。</p>
+<h3 id="4-API定义-amp-架构"><a href="#4-API定义-amp-架构" class="headerlink" title="4. API定义 &amp; 架构"></a>4. API定义 &amp; 架构</h3><p>确定完需求后，就需要完善后端系统暴露的API。设计请求参数，响应体，状态码，以及HTTP方法类型等。API设计是否使用REST、GraphQL或GRPC。</p>
+<p><img src="/Images/SystemDesign-Conclusion-Swagger.png" alt="API设计 - Swagger"></p>
+<p>设计好API接口后，开始在白板中绘制系统所需要的组件。从客户端的组件开始，到API网关、负载均衡策略。</p>
+<p><img src="/Images/SystemDesign-Conclusion-API.png" alt="API网关 &amp; 负载均衡"></p>
+<p>如果你被要求设计一个像爱奇艺平台时，你还可以谈论 CDN（内容交付网络），它有助于提供静态图像或视频文件。</p>
+<p>对于每个API接口，对于非CRUD的API接口，还需要考虑是否需要补充高级算法。<br>例如，设计电商平台中：</p>
+<ul>
+<li>要获得首页商品列表，可以提出一个商品推荐算法。</li>
+<li>如果用户查看商品详情，这将是一个普通的 CRUD API接口。</li>
+</ul>
+<h3 id="5-数据库-amp-缓存"><a href="#5-数据库-amp-缓存" class="headerlink" title="5. 数据库 &amp; 缓存"></a>5. 数据库 &amp; 缓存</h3><p>对于大部分系统，数据库是必不可少的组件。针对于系统的长期存储数据：</p>
+<ul>
+<li>应该清楚地了解数据建模中涉及的实体及其之间的关系。</li>
+<li>弄清楚数据是结构化的还是非结构化的，以及它是否需要架构灵活性。<br>上述问题的答案将影响，系统选择使用 SQL 还是 NoSQL 数据库。</li>
+</ul>
+<p>大多数系统都是重读系统。因此可以通过根据访问模式在列或一组列上创建索引来加速所有数据库读取查询。可以使用一个主从数据库的架构，在主设备上执行写入，而从从设备上完成读取。这会将读取与写入隔离开来，从而提高系统的性能。</p>
+<p>从数据库读取会导致 IO 操作在计算上执行起来很昂贵。系统可以在应用程序和数据库之间添加一个缓存层以最小化磁盘 IO。这将进一步提高系统的性能。在添加缓存时，需要在缓存逐出策略以及缓存模式（例如直写、回写、缓存搁置等）之间进行选择</p>
+<p>当系统是面对百万级用户时，单节点数据库不再承受其并发量，需要采用分布式数据库。因此需要在多个数据库服务器之间分发数据，这称为数据分区。面试官可能会询问有关可用于分发数据的不同数据分区策略并讨论使用每种策略的权衡。</p>
+<h2 id="四、总结-Summary"><a href="#四、总结-Summary" class="headerlink" title="四、总结 Summary"></a>四、总结 <em>Summary</em></h2><p>不足的地方还是很多，很多地方总是泛泛而谈，很多地方理解的不够透彻，很多地方自己讲解的不够透彻。路还很远，继续走下去了~</p>
+<p><img src="/Images/SystemDesign-Conclusion.jpeg"></p>
+<center>>- 系统设计完结撒花❀ -<</center></div><div class="article-licensing box"><div class="licensing-title"><p>简单系统设计 —— 面试（结）</p><p><a href="https://minram.github.io/xi-tong-she-ji/systemdesign-09-interview/">https://minram.github.io/xi-tong-she-ji/systemdesign-09-interview/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>MinRam</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2022-01-31</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2022-02-01</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/%E9%9D%A2%E8%AF%95/">面试</a><a class="link-muted mr-2" rel="tag" href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css"><div class="social-share"></div><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script></article></div><div class="card"><div class="card-content"><h3 class="menu-label has-text-centered">对你有帮助？ 请我喝一杯咖啡吧 ฅ’ω’ฅ </h3><div class="buttons is-centered"><a class="button donate" data-type="wechat"><span class="icon is-small"><i class="fab fa-weixin"></i></span><span>Wechat</span><span class="qrcode"><img src="/img/donates/wechat_donate.jpg" alt="Wechat"></span></a><a class="button donate" data-type="alipay"><span class="icon is-small"><i class="fab fa-alipay"></i></span><span>Alipay</span><span class="qrcode"><img src="/img/donates/alipay_donate.jpg" alt="Alipay"></span></a></div></div></div><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/xi-tong-she-ji/systemdesign-08-cap/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">简单系统设计 —— CAP理论（八）</span></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="content" id="waline-thread"></div><script src="https://cdn.jsdelivr.net/npm/@waline/client@1.3.1/dist/Waline.min.js"></script><script>Waline({
+            el: '#waline-thread',
+            serverURL: "https://waline-comment-hitdlf2dx-minram.vercel.app/",
+            lang: "zh-CN",
+            visitor: true,
+            emoji: ["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],
+            dark: "auto",
+            meta: ["nick","mail","link"],
+            requiredMeta: ["nick"],
+            login: "enable",
+            
+            
+            pageSize: 10,
+            avatarCDN: "https://sdn.geekzu.org/avatar/",
+            avatarForce: false,
+            highlight: true,
+            mathTagSupport: false,
+            copyright: true,
+            
+        });</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/avatar.jpg" alt="MinRam"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">MinRam</p><p class="is-size-6 is-block">Software Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>SuZhou. JiangSu. China</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives"><p class="title">14</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories"><p class="title">4</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags"><p class="title">14</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/minram" target="_blank" rel="noopener">关注</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="WeChat" href="https://github.com/minram"><img src="/img/social_link/wechat.svg" style="height: 20px;width: 20px;"></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/minram"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Gmail" href="mailto:minfysui@gmail.com"><img src="/img/social_link/gmail.svg" style="height: 20px;width: 20px;"></a></div></div></div><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="level is-mobile" href="#一、前言-Overview"><span class="level-left"><span class="level-item">一、前言 Overview</span></span></a></li><li><a class="level is-mobile" href="#二、系统设计面试的目的-Destination"><span class="level-left"><span class="level-item">二、系统设计面试的目的 Destination</span></span></a></li><li><a class="level is-mobile" href="#三、关键步骤-Steps"><span class="level-left"><span class="level-item">三、关键步骤 Steps</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#1-澄清需求和问题"><span class="level-left"><span class="level-item">1. 澄清需求和问题</span></span></a></li><li><a class="level is-mobile" href="#2-容量估算"><span class="level-left"><span class="level-item">2. 容量估算</span></span></a></li><li><a class="level is-mobile" href="#3-设计目标"><span class="level-left"><span class="level-item">3. 设计目标</span></span></a></li><li><a class="level is-mobile" href="#4-API定义-amp-架构"><span class="level-left"><span class="level-item">4. API定义 &amp; 架构</span></span></a></li><li><a class="level is-mobile" href="#5-数据库-amp-缓存"><span class="level-left"><span class="level-item">5. 数据库 &amp; 缓存</span></span></a></li></ul></li><li><a class="level is-mobile" href="#四、总结-Summary"><span class="level-left"><span class="level-item">四、总结 Summary</span></span></a></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io/" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile" href="https://www.microsoft.com/zh-cn/ard/recruitment" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">微软招聘</span></span><span class="level-right"><span class="level-item tag">www.microsoft.com</span></span></a></li></ul></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/Hexo/"><span class="level-start"><span class="level-item">Hexo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E7%9E%8E%E6%8A%98%E8%85%BE%E7%B3%BB%E5%88%97/"><span class="level-start"><span class="level-item">瞎折腾系列</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E7%A8%8B%E5%BA%8F%E5%91%98%E9%9D%A2%E8%AF%95%E6%94%BB%E7%95%A5/"><span class="level-start"><span class="level-item">程序员面试攻略</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/"><span class="level-start"><span class="level-item">系统设计</span></span><span class="level-end"><span class="level-item tag">9</span></span></a></li></ul></div></div></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-01-31T05:00:00.000Z">2022-01-31</time></p><p class="title"><a href="/xi-tong-she-ji/systemdesign-09-interview/">简单系统设计 —— 面试（结）</a></p><p class="categories"><a href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-01-09T05:00:00.000Z">2022-01-09</time></p><p class="title"><a href="/xi-tong-she-ji/systemdesign-08-cap/">简单系统设计 —— CAP理论（八）</a></p><p class="categories"><a href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-01-09T04:00:00.000Z">2022-01-09</time></p><p class="title"><a href="/xi-tong-she-ji/systemdesign-07-consistenthashing/">简单系统设计 —— 一致性哈希（七）</a></p><p class="categories"><a href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-12-27T04:00:00.000Z">2021-12-27</time></p><p class="title"><a href="/xi-tong-she-ji/systemdesign-06-proxy/">简单系统设计 —— 代理（六）</a></p><p class="categories"><a href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-12-17T04:00:00.000Z">2021-12-17</time></p><p class="title"><a href="/xi-tong-she-ji/systemdesign-05-index/">简单系统设计 —— 索引（五）</a></p><p class="categories"><a href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">集合</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2022/01/"><span class="level-start"><span class="level-item">January 2022</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/12/"><span class="level-start"><span class="level-item">December 2021</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/11/"><span class="level-start"><span class="level-item">November 2021</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/10/"><span class="level-start"><span class="level-item">October 2021</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/CAP/"><span class="tag">CAP</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Hexo/"><span class="tag">Hexo</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/JavaScript/"><span class="tag">JavaScript</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/NPM/"><span class="tag">NPM</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E4%BB%A3%E7%90%86/"><span class="tag">代理</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93/"><span class="tag">分布式数据库</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/"><span class="tag">分布式系统</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%93%88%E5%B8%8C/"><span class="tag">哈希</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%9F%A5%E8%AF%86%E5%9C%B0%E5%9B%BE/"><span class="tag">知识地图</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/"><span class="tag">系统设计</span><span class="tag">9</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%B4%A2%E5%BC%95/"><span class="tag">索引</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%BC%93%E5%AD%98/"><span class="tag">缓存</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/"><span class="tag">负载均衡</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E9%9D%A2%E8%AF%95/"><span class="tag">面试</span><span class="tag">12</span></a></div></div></div></div></div><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">订阅更新</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.png" alt="狐说" height="28"></a><p class="is-size-7"><span>&copy; 2022 MinRam</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> <br>本站所有文章已同步微信公众号 <a>FoxCode</a><br><span id="busuanzi_container_site_uv">访客数：<span id="busuanzi_value_site_uv">0</span></span></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-Hans");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"文章","pages":"页","categories":"分类","tags":"标签"});
+        });</script></body></html>
