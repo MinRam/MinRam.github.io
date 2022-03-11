@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Linux操作系统 —— 内核（二） - 狐说</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="狐说"><meta name="msapplication-TileImage" content="/img/favicon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="狐说"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="系统的引擎"><meta property="og:type" content="blog"><meta property="og:title" content="Linux操作系统 —— 内核（二）"><meta property="og:url" content="https://minram.github.io/linux-cao-zuo-xi-tong/operationsystem-02-kernel-copy/"><meta property="og:site_name" content="狐说"><meta property="og:description" content="系统的引擎"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/minram/minram.github.io/Images/OperateSystem-Kernel-Title.jpg"><meta property="article:published_time" content="2022-02-16T05:00:00.000Z"><meta property="article:modified_time" content="2022-03-03T09:28:03.653Z"><meta property="article:author" content="MinRam"><meta property="article:tag" content="操作系统"><meta property="article:tag" content="Linux"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://cdn.jsdelivr.net/gh/minram/minram.github.io/Images/OperateSystem-Kernel-Title.jpg"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://minram.github.io/linux-cao-zuo-xi-tong/operationsystem-02-kernel-copy/"},"headline":"Linux操作系统 —— 内核（二）","image":["https://cdn.jsdelivr.net/gh/minram/minram.github.io/Images/OperateSystem-Kernel-Title.jpg"],"datePublished":"2022-02-16T05:00:00.000Z","dateModified":"2022-03-03T09:28:03.653Z","author":{"@type":"Person","name":"MinRam"},"publisher":{"@type":"Organization","name":"狐说","logo":{"@type":"ImageObject","url":"https://minram.github.io/img/logo.png"}},"description":"系统的引擎"}</script><link rel="canonical" href="https://minram.github.io/linux-cao-zuo-xi-tong/operationsystem-02-kernel-copy/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><script>var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?b23c7486a462408fced4f792fc81a6a8";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();</script><meta name="msvalidate.01" content="58D8CEFE148E36C57AB5AF385614971B"><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><meta name="generator" content="Hexo 6.0.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.png" alt="狐说" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">主页</a><a class="navbar-item" href="/archives">归档</a><a class="navbar-item" href="/categories">集合</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/comments">留言</a><a class="navbar-item" href="/about">关于</a></div><div class="navbar-end"><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-9-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="fill" src="https://cdn.jsdelivr.net/gh/minram/minram.github.io/Images/OperateSystem-Kernel-Title.jpg" alt="Linux操作系统 —— 内核（二）"></span></div><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2022-02-16T05:00:00.000Z" title="2/16/2022, 1:00:00 PM">2022-02-16</time>发表</span><span class="level-item"><time dateTime="2022-03-03T09:28:03.653Z" title="3/3/2022, 5:28:03 PM">2022-03-03</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">Linux操作系统</a></span><span class="level-item">23 minutes读完 (大约 3488 个字)</span><span class="level-item" id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv">0</span>&nbsp;已阅</span></div></div><h1 class="title is-3 is-size-4-mobile">Linux操作系统 —— 内核（二）</h1><div class="content"><blockquote>
+<p>本系列，是自己学习Linux过程中的笔记。<br>希望读者在看完全文后，也能留下你们的经验或者问题。<br>如果能从这里学到点东西，记得请我喝杯☕☕☕~<br>                                                        <p align="right">—— MinRam</p></p>
+</blockquote>
+<h3 id="一、前言-Overview"><a href="#一、前言-Overview" class="headerlink" title="一、前言 Overview"></a>一、前言 <em>Overview</em></h3><blockquote>
+<p>操作系统（<em>Operate System</em>) 是硬件的管家。</p>
+</blockquote>
+<p>组装过个人电脑（<em>Personal Compute</em>)的朋友，一定知道一台完整的电脑主要包括： <strong>CPU</strong>, <strong>内存条</strong>, <strong>主板</strong>, <strong>硬盘</strong>, <strong>显示器</strong>, <strong>鼠标&#x2F;键盘</strong>, <strong>显卡</strong></p>
+<p><img src="/Images/OperateSystem-Kernel-Component.png" alt="个人计算机基本组件"></p>
+<p>在组装完这些硬件后，还需要安装一个操作系统，比如windows。在经过各种配置（折腾），最后完成了从硬件到可操作的计算机组装。最后装上<em>QQ</em>，加个群，愉快地在群里吹逼。</p>
+<p><strong>那么操作系统是如何管理这么多的组件，最后只需要通过鼠标和键盘，就能提供各种各样的服务呢？</strong></p>
+<h3 id="二、内核-Kernal"><a href="#二、内核-Kernal" class="headerlink" title="二、内核 Kernal"></a>二、内核 <em>Kernal</em></h3><blockquote>
+<p><strong>内核</strong>(<em>Kernal</em>), 是操作系统的心脏，可以理解是一家通过包装和管理硬件资源，为上层运行的软件提供简单便捷服务的公司。</p>
+</blockquote>
+<p>以较合理的方式阐述内核的地位：</p>
+<p><img src="/Images/OperateSystem-Kernel-Position.png" alt="内核地位"></p>
+<ul>
+<li>从技术层面讲：内核是硬件和软件的中间层。作用是将应用层序的请求传递给硬件，并充当底层驱动程序，对系统中的各种设备和组件进行寻址。</li>
+<li>从应用层面讲：上层应用软件并不关心硬件，它最多只需要关心内核。内核是应用程序在系统中所能触碰的最底层。所以内核抽象了硬件，让应用感知不到实际硬件的逻辑细节。</li>
+<li>内核是硬件的资源管理程序。负责将可用资源（CPU, Disk, RAM)分配到各个系统进程。</li>
+<li>内核也基于系统调用子系统（<em>System Call</em>)提供了一整套系统操作库，让应用程序能像普通函数一样，调用系统接口。</li>
+</ul>
+<p>系统主要由以下几个组成部分，由系统调用（系统调用子系统）统一管理。应用通过系统调用提供的函数接口与内核进行交互。用户应用程序执行的区域是用户空间，以下则是内核空间。</p>
+<p><img src="/Images/OperateSystem-Kernel-Map.jpg" alt="操作系统内核体系结构图"></p>
+<p>以上阐述，可能都听不懂，所以结合QQ应用，从打开到发消息吹逼，解释内核各组件的用途。</p>
+<p><img src="/Images/OperateSystem-Kernel-QQ.png" alt="年少有钱"></p>
+<h4 id="1-设备管理子系统-（Device-Management-System）"><a href="#1-设备管理子系统-（Device-Management-System）" class="headerlink" title="1. 设备管理子系统 （Device Management System）"></a>1. 设备管理子系统 （<em>Device Management System</em>）</h4><blockquote>
+<p>计算机有各式各样的外接设备（鼠标，键盘，摄像头，音响）。这些设备都是由不同制造商制作的，但却都能在操作系统中适配。其关键就是<strong>设备管理子系统</strong></p>
+</blockquote>
+<p>操作系统的设备管理子系统，又叫做设备驱动系统。为了能够兼容这些各式各样的设备，系统将设备进行了抽象成几个动作（初始化&#x2F;释放，读取设备上的信息，发送消息给设备，检测设备错误）。这样操作系统就不必去定义所有牌子的设备。</p>
+<blockquote>
+<p>在Linux系统中，设备被分成：字符设备，块设备，网络设备。</p>
+</blockquote>
+<p>在QQ的例子中，我们分成两类设备： 输入设备和输出设备。</p>
+<blockquote>
+<p><strong>输入设备</strong>，就是<strong>计算机</strong>给使用者（客户）提供的<strong>客户对接员</strong>（客服)，用来接受使用者（客户）的反馈。</p>
+</blockquote>
+<p>鼠标&#x2F;键盘，就是<strong>计算机</strong>的<strong>输入设备</strong>。我们通过移动鼠标，告知电脑，指针往哪个方向移动了多少，左键或者右键。又或者通过键盘，告知电脑，我们输入什么样的字符。如同公司的客服，配备销售、售前的岗位，与客户对接，把需求传递到后方。</p>
+<p>而对于操作系统，鼠标&#x2F;键盘对应的驱动（<strong>输入设备驱动</strong>），就是<strong>操作系统</strong>配备的<strong>客户对接员</strong>，用来解释设备传递过来的信息。同时这会给操作系统发送<strong>中断</strong>信号，告知操作系统需要停下来，听听使用者要干嘛。这个时候使用者发送消息的事件，为<strong>中断事件</strong> <em>Interrupt Event</em>。</p>
+<p>补充下硬件到软件的知识（以现在常见的USB接口鼠标为例）：<br><img src="/Images/OperateSystem_Kernal_Driver.jpg" alt="鼠标信号流"></p>
+<p>除了USB接口的鼠标外，还有PS&#x2F;2和串口等，其信号流路径各不相同。<br><img src="/Images/OperateSystem_Kernal_USBport.jpg" alt="USB接口"></p>
+<p><strong>现在通过鼠标，能操作指针去打开QQ。</strong></p>
+<blockquote>
+<p><strong>输出设备</strong>，就是<strong>计算机</strong>给使用者（客户）提供的<strong>产品交付员</strong>，用来给使用者（客户）反馈结果。</p>
+</blockquote>
+<p>显示器 + 显卡，就是<strong>计算机</strong>的<strong>输出设备</strong>。将计算机处理结果展示给使用者（客户）。对于显卡和显示器，只知道在哪个坐标，展示什么图像（像素）。当鼠标移动时，不断的刷新指针的位置，重新绘制。</p>
+<p>而对于操作系统，显卡驱动就是操作系统的<strong>产品交付员</strong>。</p>
+<p><strong>因此通过显示器，我们能知道指针到哪了，QQ的快捷键位置，以及QQ运行过程中的各种消息。</strong></p>
+<p><img src="/Images/OperateSystem_Kernal_Drivers.png" alt="驱动"></p>
+<h4 id="2-文件管理子系统-File-Management-System"><a href="#2-文件管理子系统-File-Management-System" class="headerlink" title="2. 文件管理子系统 (File Management System)"></a>2. 文件管理子系统 (<em>File Management System</em>)</h4><blockquote>
+<p>通过鼠标点击快捷键，发送中断事件，操作系统开始处理“<strong>指针点击QQ快捷键</strong>”事件。</p>
+</blockquote>
+<p>在操作系统知道，指针点击了QQ的快捷键后，操作系统开始启动QQ。而这不再是简单的移动指针，不是零星的操作，于是系统选择单独立项，由单独的进程（项目组）来执行这个项目。</p>
+<p>显然，立项就需要有完整的<strong>执行计划书</strong>，指导系统该怎么做，怎么执行，遇到各种情况该怎么办。而这些逻辑都被程序定义好，也就是由开发者设计并编写的代码，通过编译变成这份<strong>项目执行计划书</strong>（程序）。</p>
+<p>这些程序，都是通过二进制被存放在计算机的存储设备上，也就是常说的<strong>硬盘</strong>。硬盘也是计算机的物理设备。在第一次使用时，会进行<strong>格式化</strong> (对存储空间初始化)之后，就能存储这些文件。为管理这些文件，操作系统提供了<strong>文件管理子系统</strong>（<em>File Management System</em>)。就像存放项目计划书的档案室，有一定的归档格式，在需要的时候，可以拿到对应应用的程序。</p>
+<p>从文件管理子系统中，我们拿到了QQ的<strong>程序</strong>。这只是一份二进制数据，指导QQ的运行逻辑。</p>
+<blockquote>
+<p>在Linux系统中，有一个概念： <strong>一切都是文件</strong>。Linux把各种资源都当作文件，包括硬件设备（对应设备文件）。所以Linux系统的<strong>根文件系统</strong>实现了虚拟文件系统（<em>Virtual File System, VFS</em>)。</p>
+</blockquote>
+<h4 id="3-系统调用子系统-System-Call-System"><a href="#3-系统调用子系统-System-Call-System" class="headerlink" title="3. 系统调用子系统 (System Call System)"></a>3. 系统调用子系统 (<em>System Call System</em>)</h4><blockquote>
+<p>系统调用，是操作系统上层应用进入内核的入口。</p>
+</blockquote>
+<p>就跟项目的建立，需要项目组，人力，物力和流程审批一样。运行一个程序，需要CPU、内存、各种设备的调度。而资源的调度，就涉及到两个问题：</p>
+<ol>
+<li><strong>效率</strong>，时间就是金钱，不管是资源申请还是使用，都应尽可能高效。</li>
+<li><strong>权限</strong>，一个公司中会有多个项目，每个项目都有各自的权限。同样的每个程序都有各自的权限，普通程序不能访问机密程序的资源等。</li>
+</ol>
+<p><strong>效率</strong>，主要就是依靠操作系统的统一接口，统一的办事大厅，也就是<strong>系统调用</strong>。<strong>权限</strong>，则依靠操作系统的权限机制，例如linux的文件权限管理。</p>
+<p>而QQ的启动，就需要通过系统调用，来调用进程管理子系统，创建新<strong>进程</strong>（<em>Process</em>)。</p>
+<p><strong>通过系统调用，我们为QQ建立起新进程，用来专门处理QQ的逻辑。</strong></p>
+<blockquote>
+<p>一旦项目(<em>程序</em>）正式立项，就要开始执行，就要成立项目组(<em>进程</em>），将开发人员（<em>线程</em>)分配到这个项目组(<em>进程</em>），按照项目执行计划书（<em>代码</em>）一步一步执行。</p>
+</blockquote>
+<h4 id="4-进程管理子系统-Process-Management-System"><a href="#4-进程管理子系统-Process-Management-System" class="headerlink" title="4. 进程管理子系统 (Process Management System)"></a>4. 进程管理子系统 (<em>Process Management System</em>)</h4><blockquote>
+<p>通过进程管理子系统，创建了QQ进程。由文件系统中的静态程序转变成运行中的进程。</p>
+</blockquote>
+<p>进程管理子系统的核心业务就是进程调度。在Linux内核中，它的调度单位就是进程，负责调度多个进程对CPU的访问，从而在宏观上，系统中的进程是并发的。除了上面提到的创建新进程（<em>fock</em>,<em>exec</em>)，进程调度子系统还提供了结束进程（<em>kill</em>,<em>exit</em>)，控制进程，同步进程以及进程间通讯的接口。</p>
+<p><img src="/Images/OperateSystem_Kernal_Process.png"></p>
+<blockquote>
+<p><em>CPU的处理线程</em>就好比开发人员，多个进程就是一个个项目，进程管理子系统就像项目经理，负责调度项目到开发人员手上进行。</p>
+</blockquote>
+<p><strong>进程和程序的区别：</strong></p>
+<ul>
+<li>程序： 存放在硬盘（存储设备）上的一段代码和数据的可执行镜像，是一个静态的实体，并不会有任何变化。</li>
+<li>进程： 是一个执行中的程序，由CPU执行，在根据代码的逻辑，动态变化的实体。</li>
+</ul>
+<p><strong>通过进程管理子系统，为QQ建立一个进程（项目组），为这个进程提供可用的CPU（开发人员）</strong></p>
+<h4 id="5-内存管理子系统-RAM-Management-System"><a href="#5-内存管理子系统-RAM-Management-System" class="headerlink" title="5. 内存管理子系统 (RAM Management System)"></a>5. 内存管理子系统 (<em>RAM Management System</em>)</h4><blockquote>
+<p>通过内存管理子系统，保证系统各个进程安全访问内存区域。</p>
+</blockquote>
+<p>在Linux系统中，内存管理子系统保证各个进程有自己独立且私密的内存空间，同时也实现了虚拟内存到物理内存的转换，以及系统的可用空间。</p>
+<p><img src="/Images/OperateSystem_Kernal_RAM.jpg" alt="内存"></p>
+<blockquote>
+<p>每个项目组都需要自己的会议室，自己的草稿白板，同时应该具备一定的保密性，避免被其他项目组看到。所以内存管理子系统，又像是<strong>会议室管理系统</strong></p>
+</blockquote>
+<p>内存管理的硬件按照分页方式管理内存，分页就是把系统的物理内存按照相同大小等分，每个内存分片称作内存页，通常内存页大小是4KB。</p>
+<p>内存管理子系统要管理的不仅是4KB缓冲区，它提供了对4KB缓冲区的抽象，例如slab分配器。这种内存管理模式使用4KB缓冲区为基数，然后从中分配管理结构，并跟踪内存页使用情况 ，系统中哪些内存页是满的，哪些内存页面为空，哪些内存页没有完全使用。这样一来，系统就支持动态调整内存使用情况。</p>
+<p><img src="/Images/OperateSystem_Kernal_SLAB.jpg" alt="Slab分配器"></p>
+<blockquote>
+<p>补充一点，Linux是支持内存交换的，因为Linux中使用的是虚拟内存，当物理内存不足时，内存管理子系统会将内存暂时移到磁盘中，在物理内存充裕时又将内存页从磁盘移到物理内存中，这就是内存交换。而在<em>32bit</em>的系统上，每个进程都最大享有4GB的内存空间，因为由于32bit的系统寻址空间只有4G，当然这是虚拟内存，0~3GB是属于用户内存空间，3GB以上的则是属于 系统内存空间，实际上用户的程序几乎使用不完那么大的用户空间，一旦超出将无法正常运行，当然系统内存空间与用户内存空间是可以调整的。</p>
+</blockquote>
+<h4 id="6-网络子系统-Network-System"><a href="#6-网络子系统-Network-System" class="headerlink" title="6. 网络子系统 (Network System)"></a>6. 网络子系统 (<em>Network System</em>)</h4><p>网络子系统，主要是为了同其他机器进行通讯，因此操作系统常常将与网络相关的代码被Linux独立开，形成一个相对独立的子系统，称为网络子系统。</p>
+<p>后续会有单独一章讲解。</p>
+<h3 id="三、总结-Summary"><a href="#三、总结-Summary" class="headerlink" title="三、总结 Summary"></a>三、总结 <em>Summary</em></h3><p>综上，整个内核大致功能就是这些，这里只是简单讲下后续单独展开各子系统运行逻辑。</p>
+<h3 id="四、引用-Reference"><a href="#四、引用-Reference" class="headerlink" title="四、引用 Reference"></a>四、引用 <em>Reference</em></h3><ul>
+<li>[1] <a target="_blank" rel="noopener" href="https://www.oreilly.com/openbook/linuxdrive3/book/">Linux Device Driver</a></li>
+</ul>
+</div><div class="article-licensing box"><div class="licensing-title"><p>Linux操作系统 —— 内核（二）</p><p><a href="https://minram.github.io/linux-cao-zuo-xi-tong/operationsystem-02-kernel-copy/">https://minram.github.io/linux-cao-zuo-xi-tong/operationsystem-02-kernel-copy/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>MinRam</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2022-02-16</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2022-03-03</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><a class="link-muted mr-2" rel="tag" href="/tags/Linux/">Linux</a></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css"><div class="social-share"></div><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script></article></div><div class="card"><div class="card-content"><h3 class="menu-label has-text-centered">对你有帮助？ 请我喝一杯咖啡吧 ฅ’ω’ฅ </h3><div class="buttons is-centered"><a class="button donate" data-type="wechat"><span class="icon is-small"><i class="fab fa-weixin"></i></span><span>Wechat</span><span class="qrcode"><img src="/img/donates/wechat_donate.jpg" alt="Wechat"></span></a><a class="button donate" data-type="alipay"><span class="icon is-small"><i class="fab fa-alipay"></i></span><span>Alipay</span><span class="qrcode"><img src="/img/donates/alipay_donate.jpg" alt="Alipay"></span></a></div></div></div><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/linux-cao-zuo-xi-tong/operationsystem-01-openning/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Linux操作系统 —— 开篇（一）</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/linux-cao-zuo-xi-tong/operationsystem-02-kernel/"><span class="level-item">Linux操作系统 —— 系统调用（三）</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="content" id="waline-thread"></div><script src="https://cdn.jsdelivr.net/npm/@waline/client@1.5.4/dist/Waline.min.js"></script><script>Waline({
+            el: '#waline-thread',
+            serverURL: "https://waline-comment-hitdlf2dx-minram.vercel.app/",
+            path: window.location.pathname,
+            lang: "zh-CN",
+            visitor: true,
+            emoji: ["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],
+            dark: "auto",
+            meta: ["nick","mail","link"],
+            requiredMeta: ["nick"],
+            login: "enable",
+            
+            pageSize: 10,
+            
+            
+            math: false,
+            copyright: true,
+            
+        });</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/avatar.jpg" alt="MinRam"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">MinRam</p><p class="is-size-6 is-block">Software Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>SuZhou. JiangSu. China</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives"><p class="title">17</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories"><p class="title">5</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags"><p class="title">16</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/minram" target="_blank" rel="noopener">关注</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="WeChat" href="https://github.com/minram"><img src="/img/social_link/wechat.svg" style="height: 20px;width: 20px;"></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/minram"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Gmail" href="mailto:minfysui@gmail.com"><img src="/img/social_link/gmail.svg" style="height: 20px;width: 20px;"></a></div></div></div><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="level is-mobile" href="#一、前言-Overview"><span class="level-left"><span class="level-item">一、前言 Overview</span></span></a></li><li><a class="level is-mobile" href="#二、内核-Kernal"><span class="level-left"><span class="level-item">二、内核 Kernal</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#1-设备管理子系统-（Device-Management-System）"><span class="level-left"><span class="level-item">1. 设备管理子系统 （Device Management System）</span></span></a></li><li><a class="level is-mobile" href="#2-文件管理子系统-File-Management-System"><span class="level-left"><span class="level-item">2. 文件管理子系统 (File Management System)</span></span></a></li><li><a class="level is-mobile" href="#3-系统调用子系统-System-Call-System"><span class="level-left"><span class="level-item">3. 系统调用子系统 (System Call System)</span></span></a></li><li><a class="level is-mobile" href="#4-进程管理子系统-Process-Management-System"><span class="level-left"><span class="level-item">4. 进程管理子系统 (Process Management System)</span></span></a></li><li><a class="level is-mobile" href="#5-内存管理子系统-RAM-Management-System"><span class="level-left"><span class="level-item">5. 内存管理子系统 (RAM Management System)</span></span></a></li><li><a class="level is-mobile" href="#6-网络子系统-Network-System"><span class="level-left"><span class="level-item">6. 网络子系统 (Network System)</span></span></a></li></ul></li><li><a class="level is-mobile" href="#三、总结-Summary"><span class="level-left"><span class="level-item">三、总结 Summary</span></span></a></li><li><a class="level is-mobile" href="#四、引用-Reference"><span class="level-left"><span class="level-item">四、引用 Reference</span></span></a></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io/" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile" href="https://www.microsoft.com/zh-cn/ard/recruitment" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">微软招聘</span></span><span class="level-right"><span class="level-item tag">www.microsoft.com</span></span></a></li></ul></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/Hexo/"><span class="level-start"><span class="level-item">Hexo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"><span class="level-start"><span class="level-item">Linux操作系统</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/categories/%E7%9E%8E%E6%8A%98%E8%85%BE%E7%B3%BB%E5%88%97/"><span class="level-start"><span class="level-item">瞎折腾系列</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E7%A8%8B%E5%BA%8F%E5%91%98%E9%9D%A2%E8%AF%95%E6%94%BB%E7%95%A5/"><span class="level-start"><span class="level-item">程序员面试攻略</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/"><span class="level-start"><span class="level-item">系统设计</span></span><span class="level-end"><span class="level-item tag">9</span></span></a></li></ul></div></div></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-03-03T05:00:00.000Z">2022-03-03</time></p><p class="title"><a href="/linux-cao-zuo-xi-tong/operationsystem-02-kernel/">Linux操作系统 —— 系统调用（三）</a></p><p class="categories"><a href="/categories/Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">Linux操作系统</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-02-16T05:00:00.000Z">2022-02-16</time></p><p class="title"><a href="/linux-cao-zuo-xi-tong/operationsystem-02-kernel-copy/">Linux操作系统 —— 内核（二）</a></p><p class="categories"><a href="/categories/Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">Linux操作系统</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-02-10T05:00:00.000Z">2022-02-10</time></p><p class="title"><a href="/linux-cao-zuo-xi-tong/operationsystem-01-openning/">Linux操作系统 —— 开篇（一）</a></p><p class="categories"><a href="/categories/Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">Linux操作系统</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-01-31T05:00:00.000Z">2022-01-31</time></p><p class="title"><a href="/xi-tong-she-ji/systemdesign-09-interview/">简单系统设计 —— 面试（结）</a></p><p class="categories"><a href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-01-09T05:00:00.000Z">2022-01-09</time></p><p class="title"><a href="/xi-tong-she-ji/systemdesign-08-cap/">简单系统设计 —— CAP理论（八）</a></p><p class="categories"><a href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/">系统设计</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">集合</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2022/03/"><span class="level-start"><span class="level-item">March 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/02/"><span class="level-start"><span class="level-item">February 2022</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/01/"><span class="level-start"><span class="level-item">January 2022</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/12/"><span class="level-start"><span class="level-item">December 2021</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/11/"><span class="level-start"><span class="level-item">November 2021</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/10/"><span class="level-start"><span class="level-item">October 2021</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/CAP/"><span class="tag">CAP</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Hexo/"><span class="tag">Hexo</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/JavaScript/"><span class="tag">JavaScript</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Linux/"><span class="tag">Linux</span><span class="tag">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/NPM/"><span class="tag">NPM</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E4%BB%A3%E7%90%86/"><span class="tag">代理</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93/"><span class="tag">分布式数据库</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/"><span class="tag">分布式系统</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%93%88%E5%B8%8C/"><span class="tag">哈希</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"><span class="tag">操作系统</span><span class="tag">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%9F%A5%E8%AF%86%E5%9C%B0%E5%9B%BE/"><span class="tag">知识地图</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/"><span class="tag">系统设计</span><span class="tag">9</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%B4%A2%E5%BC%95/"><span class="tag">索引</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%BC%93%E5%AD%98/"><span class="tag">缓存</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/"><span class="tag">负载均衡</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E9%9D%A2%E8%AF%95/"><span class="tag">面试</span><span class="tag">12</span></a></div></div></div></div></div><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">订阅更新</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.png" alt="狐说" height="28"></a><p class="is-size-7"><span>&copy; 2022 MinRam</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> <br>本站所有文章已同步微信公众号 <a>FoxCode</a><br><span id="busuanzi_container_site_uv">访客数：<span id="busuanzi_value_site_uv">0</span></span></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-Hans");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"文章","pages":"页","categories":"分类","tags":"标签"});
+        });</script></body></html>
