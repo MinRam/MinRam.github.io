@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Git 分支策略模型 - 狐说</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="狐说"><meta name="msapplication-TileImage" content="/img/favicon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="狐说"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="从单一分支到多分支迭代管理"><meta property="og:type" content="blog"><meta property="og:title" content="Git 分支策略模型"><meta property="og:url" content="https://minram.github.io/git/gitbrancing-01-multibranches/"><meta property="og:site_name" content="狐说"><meta property="og:description" content="从单一分支到多分支迭代管理"><meta property="og:image" content="https://minram.github.io/Images/GitBranching-Title.png"><meta property="article:published_time" content="2022-09-28T05:00:00.000Z"><meta property="article:modified_time" content="2022-10-05T09:01:32.722Z"><meta property="article:author" content="MinRam"><meta property="article:tag" content="Git"><meta property="article:tag" content="VCS"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://minram.github.io/Images/GitBranching-Title.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://minram.github.io/git/gitbrancing-01-multibranches/"},"headline":"Git 分支策略模型","image":["https://minram.github.io/Images/GitBranching-Title.png"],"datePublished":"2022-09-28T05:00:00.000Z","dateModified":"2022-10-05T09:01:32.722Z","author":{"@type":"Person","name":"MinRam"},"publisher":{"@type":"Organization","name":"狐说","logo":{"@type":"ImageObject","url":"https://minram.github.io/img/logo.png"}},"description":"从单一分支到多分支迭代管理"}</script><link rel="canonical" href="https://minram.github.io/git/gitbrancing-01-multibranches/"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><script>var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?b23c7486a462408fced4f792fc81a6a8";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();</script><meta name="msvalidate.01" content="58D8CEFE148E36C57AB5AF385614971B"><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" defer></script><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><meta name="generator" content="Hexo 6.0.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.png" alt="狐说" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">主页</a><a class="navbar-item" href="/archives">归档</a><a class="navbar-item" href="/categories">集合</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/comments">留言</a><a class="navbar-item" href="/about">关于</a></div><div class="navbar-end"><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-9-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="fill" src="/Images/GitBranching-Title.png" alt="Git 分支策略模型"></span></div><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2022-09-28T05:00:00.000Z" title="2022/9/28 下午1:00:00">2022-09-28</time>发表</span><span class="level-item"><time dateTime="2022-10-05T09:01:32.722Z" title="2022/10/5 下午5:01:32">2022-10-05</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/Git/">Git</a></span><span class="level-item">17 minutes读完 (大约 2602 个字)</span><span class="level-item" id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv">0</span>&nbsp;已阅</span></div></div><h1 class="title is-3 is-size-4-mobile">Git 分支策略模型</h1><div class="content"><blockquote>
+<p>本系列，是自己学习Linux过程中的笔记。<br>希望读者在看完全文后，也能留下你们的经验或者问题。<br>如果能从这里学到点东西，记得请我喝杯☕☕☕~<br>                                                        <p align="right">—— MinRam</p></p>
+</blockquote>
+<blockquote>
+<p>在整理自己项目<a target="_blank" rel="noopener" href="https://github.com/MinRam/Polaris_Technology_Radar">Polaris Technology Radar</a>的分支策略时，采照了当前商用级分支策略，写了些个人对这种分支模式的理解。<br>如果产品是处于持续交付策略，那么可能更适合<em>GitHub flow</em>的策略，不要试图将<em>Git</em>硬塞入你的产品团队<br>同时分支策略不是唯一固定的，我们需要适配产品需求。对于IT，没有万能钥匙存在。</p>
+</blockquote>
+<h2 id="一、前言-Overview"><a href="#一、前言-Overview" class="headerlink" title="一、前言 Overview"></a>一、前言 <em>Overview</em></h2><p><strong>本文章仅描述我自己项目中的分支策略和发布管理</strong>。当我们选择分支策略时候，应考虑产品的迭代模式，团队的开发规模和开发方式等方面。</p>
+<p>以<a target="_blank" rel="noopener" href="https://github.com/MinRam/Polaris_Technology_Radar">Polaris Technology Radar</a>为例，该项目有如下几个信息：</p>
+<ul>
+<li>项目开发团队人数 2~10人</li>
+<li>项目代码规模小，满足单人开发条件</li>
+<li>项目发布流程涉及多种环境部署</li>
+<li>项目可能支持多个发布版本并存（正式版本&#x2F;定制版本）</li>
+<li>团队开发模式为功能特性独立</li>
+<li>…</li>
+</ul>
+<h2 id="二、为什么选择Git"><a href="#二、为什么选择Git" class="headerlink" title="二、为什么选择Git"></a>二、为什么选择<em>Git</em></h2><p><em>Git</em>作为一款版本控制系统<em>VCS-Version Control System</em>, 是开源项目不二的选择。让来自不同开发者的分支能够简单的对比&#x2F;合并。</p>
+<p>同样作为<em>VCS</em>的<em>SVN- Apache Subversion</em>, 没法连接数据库就没法工作，同时<em>SVN</em>只能满足在少量开发者的场景下进行版本管控。</p>
+<h2 id="三、主分支-Main-Branches"><a href="#三、主分支-Main-Branches" class="headerlink" title="三、主分支 Main Branches"></a>三、主分支 <em>Main Branches</em></h2><p>受开发模式影响，整个项目存在两个永存的分支： <em>release</em> &amp; <em>develop</em>. </p>
+<p><img src="/Images/GitBranching-MainBranches.jpg" alt="Main Branches"></p>
+<h3 id="3-1-Release-Branches"><a href="#3-1-Release-Branches" class="headerlink" title="3.1 Release Branches"></a>3.1 <em>Release Branches</em></h3><p>我们认为<code>release</code>为主分支，其中的代码始终满足发布状态，包含对下一版本要交付的功能特性代码。</p>
+<blockquote>
+<p>该分支也是自动化构建的目标分支，只有该分支的代码，才会被发布到生产环境上。</p>
+</blockquote>
+<h3 id="3-2-Develop-Branches"><a href="#3-2-Develop-Branches" class="headerlink" title="3.2 Develop Branches"></a>3.2 <em>Develop Branches</em></h3><p>如名所示，<code>develop</code>分支是处于开发测试中的代码。</p>
+<p>只有当代码变动趋于稳定后并准备发布的时候，所有代码变动会以某种方式合并到<code>release</code>分支中，并且标记版本号。</p>
+<blockquote>
+<p>这一合并动作会在后面进一步详解。</p>
+</blockquote>
+<p>所以，每次<code>develop</code>的代码变更，合并到<code>master</code>时，这就是一个针对生产环境的代码版本。</p>
+<p>我们往往在这个合入动作（<em>Pull Request</em>)发生时，触发自动构建机制（<em>DevOps</em>, 如Git hook脚本）来构建我们的产品，并自动部署到生产环境上。</p>
+<h2 id="四、支持性分支-Supporting-Branches"><a href="#四、支持性分支-Supporting-Branches" class="headerlink" title="四、支持性分支 Supporting Branches"></a>四、支持性分支 <em>Supporting Branches</em></h2><p>除了主分支(<em>release</em> &amp; <em>develop</em>)的存在，依照我们开发模型，在整个分治策略中还有各种支持性分支，来协助团队成员进行并行开发，简化功能定位，以及为生产环境做准备。</p>
+<p>有些分支也会协助开发者，快速修复实时生产环境上的问题。</p>
+<blockquote>
+<p>与主分支的永久生命周期不一样，支持性分支的生命寿命是有限的，最终都会被删除。</p>
+</blockquote>
+<p>对于这些支持性分支，大致包含以下几类：</p>
+<ul>
+<li>功能性分支</li>
+<li>发布性分支</li>
+<li>热补丁分支</li>
+</ul>
+<p>这些分支都有明确的特定目标，并且遵循一定的原则。如只能从哪些分支上分叉出来，只能合入哪些分支。</p>
+<blockquote>
+<p>从<em>Git</em>的角度上看，这些分支没有任何区别，同样只是普通的代码分支，只是因为其目的特殊，所以有着特殊的含义。</p>
+</blockquote>
+<h3 id="4-1-特性分支-Feature-Branches"><a href="#4-1-特性分支-Feature-Branches" class="headerlink" title="4.1 特性分支 Feature Branches"></a>4.1 特性分支 <em>Feature Branches</em></h3><p><img src="/Images/GitBranching-FeatureBranchCreated.png" alt="feature branch"></p>
+<ul>
+<li>根源分支： <code>develop</code></li>
+<li>目标分支： <code>develop</code></li>
+<li>分支命名规则： 一般以<code>feature-*</code>为命名规则，同时不包含<code>release</code>, <code>develop</code>和<code>hotfix</code>字样</li>
+</ul>
+<p>功能分支，用于为即将发布的版本开发新功能。在开发该功能特性时，我们无法预估该功能最终会在哪个版本进行发布。但对于功能分支来说，只要功能还在开发，分支就一直存在。</p>
+<p>对于该分支，它生命周期的终点，要么功能开发完成，合并入<code>develop</code>,准备发布。 要么因项目安排，功能被取消，最后直接删除分支。</p>
+<blockquote>
+<p>功能分支，通常仅存在开发人员本地<em>Git</em>存储库中，不会存在远端代码仓库(<em>origin</em>）。</p>
+</blockquote>
+<ul>
+<li><strong>创建功能分支</strong>：</li>
+</ul>
+<p>从<code>develop</code>中创建。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b feature/hello-world develop</span><br><span class="line">Switched to new branch &#x27;feature/hello-world&#x27;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>完成功能开发，合并代码变动</strong>:</li>
+</ul>
+<p>在实际代码管理中，往往需要提交<code>Pull Request</code>，经过代码审查<em>Review</em>, 代码构建<em>Build&#x2F;Test</em>来保证代码准确性。这里仅展示本地合并指令。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout develop</span><br><span class="line">Switched to branch &#x27;develop&#x27;</span><br><span class="line">$ git merge --no-ff feature/hello-world</span><br><span class="line">Updating ea1b82a..05a893</span><br><span class="line">(Summary of changes)</span><br><span class="line">$ git branch -d feature/hello-world</span><br><span class="line">Deleted branch feature/hello-world</span><br><span class="line">$ git push origin develop</span><br></pre></td></tr></table></figure>
+
+<p><code>--no-ff</code> 该参数, 用来避免丢失特性开发分支的整个提交链信息，同时创建新的代码提交信息。具体详见<em>Git fast forward merge</em>内容。</p>
+<p>以下为两者简单对比：</p>
+<p><img src="/Images/GitBranching-FastForward.png" alt="fast forward"></p>
+<blockquote>
+<p><code>Pull Request</code>中也有同样的选项。</p>
+</blockquote>
+<h3 id="4-2-发布分支-Release-Branches"><a href="#4-2-发布分支-Release-Branches" class="headerlink" title="4.2 发布分支 Release-* Branches"></a>4.2 发布分支 <em>Release-* Branches</em></h3><ul>
+<li>根源分支: <code>develop</code></li>
+<li>目标分支：<code>develop/release</code></li>
+<li>分支命名规则: <code>release-*</code></li>
+</ul>
+<p><code>release-* branches</code>是为下一版本的发布做准备。他是正式发布前的预先检查环节。不同于<code>develop</code>分支对应的测试环境，<code>release-<em></code>对应的环境，更符合生产环境的标准，且在<code>release-</em></code>分支上只允许补丁相关的变动。</p>
+<ul>
+<li><strong>创建发布分支</strong></li>
+</ul>
+<p><code>release-*</code>是从<code>develop</code>创建出来的。假设当前的生产版本为<em>1.2</em>, 而<code>develop</code>已经完成新版本<em>1.3</em>所有的功能特性，我们就可以从<code>develop</code>中分支出<code>release-1.3</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout release-1.3 develop</span><br><span class="line">Switched to branch &#x27;release-1.3&#x27;</span><br><span class="line">$ ./bump-version.sh 1.3</span><br><span class="line">Files modified successfully, version bumped to 1.3.</span><br><span class="line">$ git commit -a -m &quot;Bumped version to 1.3&quot;</span><br><span class="line">[release-1.3 74d9424] Bumped version number to 1.3</span><br><span class="line">1 files changed, 1 insertions(+), 1 deletions(-)</span><br></pre></td></tr></table></figure>
+
+<p>接下来就是修改<code>release-1.3</code>上的版本信息，比如配置上的版本号。这里用<code>bump-version.sh</code>来自动更新这类信息。</p>
+<p><code>release-*</code>分支会一直存活，直到合并到<code>release</code>发布, 或者被删除.在此分支上，不得合入较大的功能变动。</p>
+<ul>
+<li><strong>完成发布分支</strong></li>
+</ul>
+<p>当<code>release-1.3</code>已经满足发布条件后，我们需要将该分支合入<code>release</code>中。同时我们需要在这次合入中打入特定标签，来保证我们能在后续众多的提交中，找到指定版本的发布提交点。</p>
+<p>首先，需要更新<code>release</code>的标签到新的版本号。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout release</span><br><span class="line">Switched to branch &#x27;release&#x27;</span><br><span class="line">$ git merge -no-ff release-1.3</span><br><span class="line">Merge made of recursive.</span><br><span class="line">(Summary of changes)</span><br><span class="line">$ git tag -a 1.3</span><br></pre></td></tr></table></figure>
+
+<p>另外，为了保留<code>release-*</code>的变动，我们还需要将<code>release-*</code>合并到<code>develop</code>，以保证所有的变动能在下一个版本中被包含。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout develop</span><br><span class="line">Switched branch to &#x27;develop&#x27;</span><br><span class="line">$ git merge -no-ff release-1.3</span><br><span class="line">Merge made of recursive.</span><br><span class="line">(Summary of changes)</span><br></pre></td></tr></table></figure>
+
+<p>最后，就是永久性的删除该分支</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git branch -d release-1.3</span><br><span class="line">Delete branch release-1.3 (was fsae5d6)</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-热补丁分支-Hotfix-Branches"><a href="#4-2-热补丁分支-Hotfix-Branches" class="headerlink" title="4.2 热补丁分支 Hotfix Branches"></a>4.2 热补丁分支 <em>Hotfix Branches</em></h3><p><img src="/Images/GitBranching-HotfixBranches.jpg" alt="Hotfix Branches"></p>
+<ul>
+<li>根源分支: <code>release</code></li>
+<li>目标分支：<code>develop/release</code></li>
+<li>分支命名规则: <code>hotfix-*</code></li>
+</ul>
+<p>热补丁分支同发布分支非常相似，同样为新生产版本做变动。不同的是，<strong>热补丁是计划外的。</strong></p>
+<p>在生产版本中总会出现一些关键Bug，需要立即采取措施来修复。我们就从生产版本的主分支分支出补丁分支来修复这类问题。</p>
+<p>采取这样的策略，可以保证<code>develop</code>分支上的开发团队可以继续专注于下一版本的特性开发。而由单独的团队来快速修复这一紧急问题。</p>
+<ul>
+<li><strong>补丁分支创建</strong><br>热补丁分支是由<code>release</code>分支出来的。例如生产环境出现了一个严重的<em>Bug</em>，但当前的<code>develop</code>的功能并不稳定，这是我们就会从<code>release</code>分支出<code>hotfix branches</code>，然后在这条分支中开始修复致命问题。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ git check -b hotfix-1.0.1 release</span><br><span class="line">Switched to a new branch &quot;hotfix-1.0.0&quot;</span><br><span class="line">$ ./bump-version.sh 1.0.1</span><br><span class="line">Files modified successfully, version bumped to 1.0.1</span><br><span class="line">$ git commit -a -m &quot;Bumped version number to 1.0.1&quot;</span><br><span class="line">[hotfix-1.0.1 41e61bb] Bumped version number to 1.2.1</span><br><span class="line">1 files changed, 1 insertions(+), 1 deletions(-)</span><br></pre></td></tr></table></figure>
+
+<p>在创建出补丁分支后，不要忘了更新版本号，此处用<code>bump-version.sh</code>代表这一动作。来描述该分支版本变化（<code>1.0.0 --> 1.0.1</code>)。</p>
+<p>接下来就是在这个分支上，修复所需要的<em>Bug</em>。</p>
+<ul>
+<li><strong>补丁分支完成</strong></li>
+</ul>
+<p>补丁分支的创建，需要合并到主分支<code>release</code>。同时也需要合并入<code>develop</code>分支，以确保该补丁能在下一个开发版本被修复。</p>
+<blockquote>
+<p>此处为<code>release</code>，而不是<code>release-*</code>。</p>
+</blockquote>
+<p>首先，需要更新<code>release</code>的标签到新的版本号。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout release</span><br><span class="line">Switched to branch &#x27;release&#x27;</span><br><span class="line">$ git merge -no-ff hotfix-1.0.1</span><br><span class="line">Merge made of recursive.</span><br><span class="line">(Summary of changes)</span><br><span class="line">$ git tag -a 1.2.1</span><br></pre></td></tr></table></figure>
+
+<p>下一步，就是将补丁合入<code>develop</code>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout develop</span><br><span class="line">Switched to branch &#x27;develop&#x27;</span><br><span class="line">$ git merge -no-ff hotfix-1.0.1</span><br><span class="line">Merge made of recursive.</span><br><span class="line">(Summary of changes)</span><br></pre></td></tr></table></figure>
+
+<p>如果当前存在<code>release-*</code>分支，我们可以直接合入<code>release-*</code>，而不用合并入<code>develop</code>。</p>
+<p>最后就是删除这一临时分支，及时清理无用分支，来保证整个仓库的简洁。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git branch -d hotfix-1.0.1</span><br><span class="line">Delete branch hotfix-1.0.1 (was abbe5d6)</span><br></pre></td></tr></table></figure>
+
+<h2 id="五、总结-Summary"><a href="#五、总结-Summary" class="headerlink" title="五、总结 Summary"></a>五、总结 <em>Summary</em></h2><p>整个分支策略模型并没有什么新颖的技能点，但从分支管理角度，它反映整个产品的开发模型。为团队建立一个对开发和发布流程的共识。</p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>Git 分支策略模型</p><p><a href="https://minram.github.io/git/gitbrancing-01-multibranches/">https://minram.github.io/git/gitbrancing-01-multibranches/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>MinRam</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2022-09-28</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2022-10-05</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/Git/">Git</a><a class="link-muted mr-2" rel="tag" href="/tags/VCS/">VCS</a></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css"><div class="social-share"></div><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script></article></div><div class="card"><div class="card-content"><h3 class="menu-label has-text-centered">对你有帮助？ 请我喝一杯咖啡吧 ฅ’ω’ฅ </h3><div class="buttons is-centered"><a class="button donate" data-type="wechat"><span class="icon is-small"><i class="fab fa-weixin"></i></span><span>Wechat</span><span class="qrcode"><img src="/img/donates/wechat_donate.jpg" alt="Wechat"></span></a><a class="button donate" data-type="alipay"><span class="icon is-small"><i class="fab fa-alipay"></i></span><span>Alipay</span><span class="qrcode"><img src="/img/donates/alipay_donate.jpg" alt="Alipay"></span></a></div></div></div><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="content" id="waline-thread"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@waline/client@2.6.3/dist/waline.css"><script src="https://cdn.jsdelivr.net/npm/@waline/client@2.6.3/dist/waline.js"></script><script>Waline.init({
+            el: '#waline-thread',
+            serverURL: "https://waline-comment-hitdlf2dx-minram.vercel.app/",
+            path: window.location.pathname,
+            lang: "zh-CN",
+            
+            emoji: ["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],
+            dark: "auto",
+            meta: ["nick","mail","link"],
+            requiredMeta: ["nick"],
+            login: "enable",
+            
+            pageSize: 10,
+            imageUploader: false,
+            highlighter: false,
+            texRenderer: false,
+            search: false,
+            pageview: false,
+            comment: null,
+            copyright: true,
+        });</script></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1 is-sticky"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/avatar.jpg" alt="MinRam"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">MinRam</p><p class="is-size-6 is-block">Software Engineer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>SuZhou. JiangSu. China</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives"><p class="title">25</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories"><p class="title">9</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags"><p class="title">26</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/minram" target="_blank" rel="noopener">关注</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="WeChat" href="https://github.com/minram"><img src="/img/social_link/wechat.svg" style="height: 20px;width: 20px;"></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/minram"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Gmail" href="mailto:minfysui@gmail.com"><img src="/img/social_link/gmail.svg" style="height: 20px;width: 20px;"></a></div></div></div><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="level is-mobile" href="#一、前言-Overview"><span class="level-left"><span class="level-item">一、前言 Overview</span></span></a></li><li><a class="level is-mobile" href="#二、为什么选择Git"><span class="level-left"><span class="level-item">二、为什么选择Git</span></span></a></li><li><a class="level is-mobile" href="#三、主分支-Main-Branches"><span class="level-left"><span class="level-item">三、主分支 Main Branches</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#3-1-Release-Branches"><span class="level-left"><span class="level-item">3.1 Release Branches</span></span></a></li><li><a class="level is-mobile" href="#3-2-Develop-Branches"><span class="level-left"><span class="level-item">3.2 Develop Branches</span></span></a></li></ul></li><li><a class="level is-mobile" href="#四、支持性分支-Supporting-Branches"><span class="level-left"><span class="level-item">四、支持性分支 Supporting Branches</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#4-1-特性分支-Feature-Branches"><span class="level-left"><span class="level-item">4.1 特性分支 Feature Branches</span></span></a></li><li><a class="level is-mobile" href="#4-2-发布分支-Release-Branches"><span class="level-left"><span class="level-item">4.2 发布分支 Release-* Branches</span></span></a></li><li><a class="level is-mobile" href="#4-2-热补丁分支-Hotfix-Branches"><span class="level-left"><span class="level-item">4.2 热补丁分支 Hotfix Branches</span></span></a></li></ul></li><li><a class="level is-mobile" href="#五、总结-Summary"><span class="level-left"><span class="level-item">五、总结 Summary</span></span></a></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io/" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile" href="https://www.microsoft.com/zh-cn/ard/recruitment" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">微软招聘</span></span><span class="level-right"><span class="level-item tag">www.microsoft.com</span></span></a></li></ul></div></div></div><div class="card widget" data-type="categories"><div class="card-content"><div class="menu"><h3 class="menu-label">分类</h3><ul class="menu-list"><li><a class="level is-mobile" href="/categories/Git/"><span class="level-start"><span class="level-item">Git</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/Hexo/"><span class="level-start"><span class="level-item">Hexo</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"><span class="level-start"><span class="level-item">Linux操作系统</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile" href="/categories/SRE/"><span class="level-start"><span class="level-item">SRE</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/categories/Visual-Studio/"><span class="level-start"><span class="level-item">Visual Studio</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E7%9E%8E%E6%8A%98%E8%85%BE%E7%B3%BB%E5%88%97/"><span class="level-start"><span class="level-item">瞎折腾系列</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/categories/%E7%A8%8B%E5%BA%8F%E5%91%98%E9%9D%A2%E8%AF%95%E6%94%BB%E7%95%A5/"><span class="level-start"><span class="level-item">程序员面试攻略</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/categories/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/"><span class="level-start"><span class="level-item">系统设计</span></span><span class="level-end"><span class="level-item tag">9</span></span></a></li><li><a class="level is-mobile" href="/categories/%E8%83%A1%E8%A8%80%E4%B9%B1%E8%AF%AD/"><span class="level-start"><span class="level-item">胡言乱语</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li></ul></div></div></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-09-28T05:00:00.000Z">2022-09-28</time></p><p class="title"><a href="/git/gitbrancing-01-multibranches/">Git 分支策略模型</a></p><p class="categories"><a href="/categories/Git/">Git</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-16T04:00:00.000Z">2022-07-16</time></p><p class="title"><a href="/sre/systemmonitor-02-slo/">简单系统质量 —— SLO（二）</a></p><p class="categories"><a href="/categories/SRE/">SRE</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-16T04:00:00.000Z">2022-07-16</time></p><p class="title"><a href="/sre/systemmonitor-03-sla/">简单系统质量 —— SLA（三）</a></p><p class="categories"><a href="/categories/SRE/">SRE</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-16T04:00:00.000Z">2022-07-16</time></p><p class="title"><a href="/sre/systemmonitor-01-sli/">简单系统质量 —— SLI（一）</a></p><p class="categories"><a href="/categories/SRE/">SRE</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-06-27T05:00:00.000Z">2022-06-27</time></p><p class="title"><a href="/visual-studio/visualstudio-solutionfile-sln/">Visual Studio ——  详解解决方案文件格式（.sln）</a></p><p class="categories"><a href="/categories/Visual-Studio/">Visual Studio</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">集合</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2022/09/"><span class="level-start"><span class="level-item">September 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/07/"><span class="level-start"><span class="level-item">July 2022</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/06/"><span class="level-start"><span class="level-item">June 2022</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/05/"><span class="level-start"><span class="level-item">May 2022</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/04/"><span class="level-start"><span class="level-item">April 2022</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/02/"><span class="level-start"><span class="level-item">February 2022</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2022/01/"><span class="level-start"><span class="level-item">January 2022</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/12/"><span class="level-start"><span class="level-item">December 2021</span></span><span class="level-end"><span class="level-item tag">5</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/11/"><span class="level-start"><span class="level-item">November 2021</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li><li><a class="level is-mobile" href="/archives/2021/10/"><span class="level-start"><span class="level-item">October 2021</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/CAP/"><span class="tag">CAP</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Git/"><span class="tag">Git</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Hexo/"><span class="tag">Hexo</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/JavaScript/"><span class="tag">JavaScript</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Linux/"><span class="tag">Linux</span><span class="tag">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/NPM/"><span class="tag">NPM</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/SLA/"><span class="tag">SLA</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/SLI/"><span class="tag">SLI</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/SLO/"><span class="tag">SLO</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/SRE/"><span class="tag">SRE</span><span class="tag">3</span></a></div><div class="control"><a class="tags has-addons" href="/tags/VCS/"><span class="tag">VCS</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/Visual-Studio/"><span class="tag">Visual Studio</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E4%B8%AA%E4%BA%BA%E6%8A%80%E8%83%BD/"><span class="tag">个人技能</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E4%BB%A3%E7%90%86/"><span class="tag">代理</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E6%95%B0%E6%8D%AE%E5%BA%93/"><span class="tag">分布式数据库</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/"><span class="tag">分布式系统</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E5%93%88%E5%B8%8C/"><span class="tag">哈希</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"><span class="tag">操作系统</span><span class="tag">5</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%9F%A5%E8%AF%86%E5%9C%B0%E5%9B%BE/"><span class="tag">知识地图</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/"><span class="tag">系统设计</span><span class="tag">9</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%B4%A2%E5%BC%95/"><span class="tag">索引</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E7%BC%93%E5%AD%98/"><span class="tag">缓存</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%81%8C%E4%B8%9A%E5%8F%91%E5%B1%95/"><span class="tag">职业发展</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/"><span class="tag">负载均衡</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E8%BD%AF%E7%9F%A5%E8%AF%86/"><span class="tag">软知识</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E9%9D%A2%E8%AF%95/"><span class="tag">面试</span><span class="tag">12</span></a></div></div></div></div></div><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">订阅更新</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.png" alt="狐说" height="28"></a><p class="is-size-7"><span>&copy; 2022 MinRam</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> <br>本站所有文章已同步微信公众号 <a>FoxCode</a><br><span id="busuanzi_container_site_uv">访客数：<span id="busuanzi_value_site_uv">0</span></span></p></div><div class="level-end"></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-Hans");</script><script>var LegolasThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><script type="text/x-mathjax-config">MathJax.Hub.Config({
+            'HTML-CSS': {
+                matchFontHeight: false
+            },
+            SVG: {
+                matchFontHeight: false
+            },
+            CommonHTML: {
+                matchFontHeight: false
+            },
+            tex2jax: {
+                inlineMath: [
+                    ['$','$'],
+                    ['\\(','\\)']
+                ]
+            }
+        });</script><script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.9/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"文章","pages":"页","categories":"分类","tags":"标签"});
+        });</script></body></html>
