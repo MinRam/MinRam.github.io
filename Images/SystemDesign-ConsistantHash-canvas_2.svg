@@ -1,0 +1,39 @@
+<svg width="600" height="400.00000000000006" xmlns="http://www.w3.org/2000/svg">
+ <g id="Layer_1">
+  <title>Layer 1</title>
+  <path id="svg_1" d="m294.29237,274.56721c-50.82873,0 -92,-41.17127 -92,-92c0,-50.82873 41.17127,-92 92,-92c50.82873,0 92,41.17127 92,92c0,50.82873 -41.17127,92 -92,92z" opacity="undefined" stroke-width="2" stroke="#000" fill="#fff"/>
+  <line id="svg_2" y2="90.28136" x2="293.5782" y1="71.28136" x1="293.5782" stroke-width="2" stroke="#000" fill="none"/>
+  <text xml:space="preserve" text-anchor="start" font-family="'Asap'" font-size="20" id="svg_3" y="79.1344" x="243.83415" stroke-width="0" stroke="#000" fill="#000000">256</text>
+  <text xml:space="preserve" text-anchor="start" font-family="'Asap'" font-size="20" id="svg_4" y="78.66047" x="312.5544" stroke-width="0" stroke="#000" fill="#000000">0</text>
+  <text fill="#000000" stroke="#000" stroke-width="0" x="151.57068" y="339.20245" id="svg_18" font-size="18" font-family="'Assistant'" text-anchor="start" xml:space="preserve">Current Status: Add Node, Remap value</text>
+  <path id="svg_5" d="m350.65232,115.04116c-2.42851,0 -4.3956,-1.96709 -4.3956,-4.3956c0,-2.42851 1.96709,-4.3956 4.3956,-4.3956c2.42851,0 4.3956,1.96709 4.3956,4.3956c0,2.42851 -1.96709,4.3956 -4.3956,4.3956z" opacity="undefined" stroke-width="0" stroke="#000000" fill="#007fff"/>
+  <path id="svg_9" d="m302.88446,278.43401c-2.42851,0 -4.39561,-1.9671 -4.39561,-4.39561c0,-2.42851 1.9671,-4.3956 4.39561,-4.3956c2.42851,0 4.3956,1.96709 4.3956,4.3956c0,2.42851 -1.96709,4.39561 -4.3956,4.39561z" opacity="undefined" stroke-width="0" stroke="#000000" fill="#007fff"/>
+  <path id="svg_10" d="m363.24383,246.1963c-2.42851,0 -4.39561,-1.9671 -4.39561,-4.39561c0,-2.42851 1.9671,-4.3956 4.39561,-4.3956c2.42851,0 4.3956,1.96709 4.3956,4.3956c0,2.42851 -1.96709,4.39561 -4.3956,4.39561z" opacity="undefined" stroke-width="0" stroke="#000000" fill="#007fff"/>
+  <path id="svg_22" d="m209.91788,225.22287c-2.42851,0 -4.39561,-1.9671 -4.39561,-4.39561c0,-2.42851 1.9671,-4.3956 4.39561,-4.3956c2.42851,0 4.3956,1.96709 4.3956,4.3956c0,2.42851 -1.96709,4.39561 -4.3956,4.39561z" opacity="undefined" stroke-width="0" stroke="#000000" fill="#007fff"/>
+  <path id="svg_23" d="m223.37357,127.97493c-2.42851,0 -4.39561,-1.9671 -4.39561,-4.39561c0,-2.42851 1.9671,-4.3956 4.39561,-4.3956c2.42851,0 4.3956,1.96709 4.3956,4.3956c0,2.42851 -1.96709,4.39561 -4.3956,4.39561z" opacity="undefined" stroke-width="0" stroke="#000000" fill="#007fff"/>
+  <path id="svg_24" d="m264.96389,99.22868c-2.42851,0 -4.39561,-1.9671 -4.39561,-4.39561c0,-2.42851 1.9671,-4.3956 4.39561,-4.3956c2.42851,0 4.3956,1.96709 4.3956,4.3956c0,2.42851 -1.96709,4.39561 -4.3956,4.39561z" opacity="undefined" stroke-width="0" stroke="#000000" fill="#007fff"/>
+  <g id="svg_25">
+   <ellipse ry="4.3956" rx="4.3956" id="svg_6" cy="155.73484" cx="206.45587" stroke-width="0" stroke="#000000" fill="#ff0000"/>
+   <line transform="rotate(180 195.813 153.215)" stroke="#ff0000" stroke-width="2" id="svg_14" y2="154.77784" x2="202.95542" y1="151.65284" x1="188.6697" fill="none"/>
+   <text transform="rotate(16 168.573 147.096)" xml:space="preserve" text-anchor="start" font-family="'Archivo'" font-size="10" id="svg_21" y="150.45957" x="151.78498" stroke-width="0" stroke="#ff0000" fill="#000000">Node C</text>
+  </g>
+  <ellipse stroke="#000000" ry="4.3956" rx="4.3956" id="svg_8" cy="199.48484" cx="384.58089" stroke-width="0" fill="#ff0000"/>
+  <text transform="rotate(15 422.833 211.316)" xml:space="preserve" text-anchor="start" font-family="'Archivo'" font-size="10" id="svg_19" y="214.67991" x="406.21986" stroke-width="0" stroke="#ff0000" fill="#000000">Node A</text>
+  <g id="svg_27">
+   <ellipse ry="4.3956" rx="4.3956" id="svg_7" cy="256.62769" cx="239.4916" stroke-width="0" stroke="#000000" fill="#ff0000"/>
+   <line transform="rotate(111 233.427 266.06)" stroke="#ff0000" stroke-width="2" id="svg_12" y2="267.62215" x2="240.57019" y1="264.49715" x1="226.28447" fill="none"/>
+   <text transform="rotate(-45 214.601 288.38)" xml:space="preserve" text-anchor="start" font-family="'Archivo'" font-size="10" id="svg_20" y="291.74432" x="197.96247" stroke-width="0" stroke="#ff0000" fill="#000000">Node B</text>
+  </g>
+  <g id="svg_17">
+   <path id="svg_13" d="m292.27104,233.44088c-28.95176,0 -52.40269,-23.45093 -52.40269,-52.40269c0,-28.95176 23.45093,-52.40269 52.40269,-52.40269c28.95176,0 52.40269,23.45093 52.40269,52.40269" opacity="undefined" stroke-width="2" fill="none" stroke="#B8D078" stroke-dasharray="5,5" transform="rotate(88.245 292.271 181.038)"/>
+   <line fill="none" stroke="#B8D078" stroke-width="2" stroke-dasharray="5,5" x1="296.55126" y1="232.56675" x2="305.36351" y2="213.02653" id="svg_15"/>
+   <line fill="none" stroke="#B8D078" stroke-width="2" stroke-dasharray="5,5" x1="296.16812" y1="233.33303" x2="316.09148" y2="241.76214" id="svg_16"/>
+  </g>
+  <line fill="none" stroke="#007fff" stroke-width="2" x1="353.63546" y1="107.65755" x2="359.1098" y2="99.26357" id="svg_34"/>
+  <line fill="none" stroke-width="2" x1="266.04612" y1="96.58723" x2="268.60081" y2="105.71112" id="svg_40" stroke="#007fff"/>
+  <path stroke-dasharray="5,5" fill="none" stroke-width="2" opacity="undefined" d="m268.28549,104.41217c34.35374,-8.58693 59.81843,4.72137 73.92599,16.286c14.10757,11.56463 36.18918,36.44977 27.65349,75.75228" id="svg_41" stroke="#007fff"/>
+  <path fill="none" stroke-width="2" opacity="undefined" d="m359.1098,100.35843c33.66261,18.9777 48.31963,66.41158 40.29061,104.45367" id="svg_32" stroke-dasharray="5,5" stroke="#007fff"/>
+  <line transform="rotate(6 384.517 200.301)" stroke="#ff0000" stroke-width="2" id="svg_11" y2="202.46976" x2="402.54278" y1="198.13216" x1="366.49212" fill="none"/>
+ </g>
+
+</svg>

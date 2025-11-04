@@ -1,0 +1,15 @@
+<svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
+ <g id="Layer_1">
+  <title>Layer 1</title>
+  <path id="svg_1" d="m294.29237,274.56721c-50.82873,0 -92,-41.17127 -92,-92c0,-50.82873 41.17127,-92 92,-92c50.82873,0 92,41.17127 92,92c0,50.82873 -41.17127,92 -92,92z" opacity="undefined" stroke-width="2" stroke="#000" fill="#fff"/>
+  <line id="svg_2" y2="90.28136" x2="293.5782" y1="71.28136" x1="293.5782" stroke-width="2" stroke="#000" fill="none"/>
+  <text xml:space="preserve" text-anchor="start" font-family="'Asap'" font-size="20" id="svg_3" y="79.1344" x="243.83415" stroke-width="0" stroke="#000" fill="#000000">256</text>
+  <text xml:space="preserve" text-anchor="start" font-family="'Asap'" font-size="20" id="svg_4" y="78.66047" x="312.5544" stroke-width="0" stroke="#000" fill="#000000">0</text>
+  <g id="svg_17">
+   <path id="svg_13" d="m292.27104,233.44088c-28.95176,0 -52.40269,-23.45093 -52.40269,-52.40269c0,-28.95176 23.45093,-52.40269 52.40269,-52.40269c28.95176,0 52.40269,23.45093 52.40269,52.40269" opacity="undefined" stroke-width="2" fill="none" stroke="#B8D078" stroke-dasharray="5,5" transform="rotate(88.245 292.271 181.038)"/>
+   <line fill="none" stroke="#B8D078" stroke-width="2" stroke-dasharray="5,5" x1="296.55126" y1="232.56675" x2="305.36351" y2="213.02653" id="svg_15"/>
+   <line fill="none" stroke="#B8D078" stroke-width="2" stroke-dasharray="5,5" x1="296.16812" y1="233.33303" x2="316.09148" y2="241.76214" id="svg_16"/>
+  </g>
+  <text fill="#000000" stroke="#000" stroke-width="0" x="214.17584" y="329.1184" id="svg_18" font-size="18" font-family="'Assistant'" text-anchor="start" xml:space="preserve">Output Range: [0, 256]</text>
+ </g>
+</svg>
